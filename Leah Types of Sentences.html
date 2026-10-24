@@ -1,0 +1,1611 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>문장 성분과 문장의 5형식 비밀 지도 - iPad 1:1 맞춤형 수업 교안</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts (Pretendard & Poppins) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Noto Sans KR', 'Poppins', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            subject: '#3b82f6',   // Blue (주어 S)
+            verb: '#f59e0b',      // Amber (동사 V)
+            object: '#10b981',    // Emerald (목적어 O)
+            complement: '#8b5cf6',// Purple (보어 C)
+            modifier: '#64748b',  // Slate (수식어 M)
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Sleek tablet scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f8fafc;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+    .touch-action-manipulation {
+      touch-action: manipulation;
+    }
+    .pen-active {
+      cursor: crosshair;
+    }
+    /* Animated Glowing badge */
+    @keyframes pulse-subtle {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.92; transform: scale(1.02); }
+    }
+    .pulse-card {
+      animation: pulse-subtle 3s infinite ease-in-out;
+    }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-800 font-sans h-screen flex flex-col overflow-hidden select-none">
+
+  <!-- Top Navigation Header -->
+  <header class="bg-white border-b border-slate-200 px-4 py-2.5 flex items-center justify-between shrink-0 shadow-xs z-30">
+    <div class="flex items-center space-x-3">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-600 to-indigo-600 flex items-center justify-center text-white shadow-md">
+        <i class="fa-solid fa-puzzle-piece text-lg"></i>
+      </div>
+      <div>
+        <div class="flex items-center space-x-2">
+          <h1 class="font-extrabold text-lg text-slate-900 tracking-tight">문장 성분 & 5형식 비밀 설계도</h1>
+          <span class="px-2 py-0.5 text-xs font-bold bg-indigo-100 text-indigo-700 rounded-full">iPad 1:1 맞춤 티칭</span>
+        </div>
+        <p class="text-xs text-slate-500">"품사는 태어난 신분(재료), 문장 성분은 문장에서 맡은 직업(역할)이야!"</p>
+      </div>
+    </div>
+
+    <!-- Quick Tool Buttons -->
+    <div class="flex items-center space-x-2">
+      <!-- Mode Switcher: Components vs 5 Patterns -->
+      <div class="bg-slate-100 p-1 rounded-xl flex items-center space-x-1 border border-slate-200">
+        <button id="viewModeComponents" onclick="switchViewSection('components')" class="px-3 py-1 text-xs font-bold rounded-lg transition bg-white text-indigo-700 shadow-xs">
+          <i class="fa-solid fa-layer-group mr-1.5"></i>문장의 4대 성분(S·V·O·C)
+        </button>
+        <button id="viewModePatterns" onclick="switchViewSection('patterns')" class="px-3 py-1 text-xs font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition">
+          <i class="fa-solid fa-route mr-1.5"></i>문장의 5형식(1~5형식)
+        </button>
+      </div>
+
+      <!-- Pad Pen Tool -->
+      <button id="togglePenBtn" class="flex items-center space-x-1.5 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-sm font-medium transition touch-action-manipulation">
+        <i class="fa-solid fa-pen-nib text-indigo-500"></i>
+        <span>패드 필기</span>
+      </button>
+
+      <!-- Teacher Script Toggle -->
+      <button id="toggleTeacherModeBtn" class="flex items-center space-x-1.5 px-3 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-300 rounded-lg text-sm font-medium transition shadow-xs touch-action-manipulation">
+        <i class="fa-solid fa-chalkboard-user text-amber-600"></i>
+        <span>선생님 코칭 스크립트 <span id="cueStatus" class="font-bold text-xs bg-amber-200 text-amber-900 px-1.5 py-0.2 rounded-full ml-1">ON</span></span>
+      </button>
+
+      <!-- Fullscreen -->
+      <button id="fullscreenBtn" class="p-2 text-slate-500 hover:text-slate-800 rounded-lg hover:bg-slate-100 transition">
+        <i class="fa-solid fa-expand"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Work Area (Two Columns) -->
+  <div class="flex-1 flex overflow-hidden relative">
+
+    <!-- Left Sidebar Navigation -->
+    <aside class="w-64 bg-white border-r border-slate-200 flex flex-col shrink-0 overflow-y-auto">
+      <div class="p-3 border-b border-slate-100 bg-slate-50 flex items-center justify-between">
+        <p id="sidebarCategoryTitle" class="text-xs font-bold text-slate-400 uppercase tracking-wider">문장 성분 리스트</p>
+        <span id="sidebarModeBadge" class="text-2xs bg-indigo-50 text-indigo-600 font-bold px-1.5 py-0.5 rounded">성분 모드</span>
+      </div>
+      <nav id="sidebarNavList" class="p-2 space-y-1">
+        <!-- Injected by JavaScript -->
+      </nav>
+
+      <!-- Core Metaphor Motivation Card -->
+      <div class="mt-auto p-3 m-2 bg-gradient-to-br from-indigo-50 via-purple-50 to-blue-50 rounded-xl border border-indigo-100">
+        <div class="flex items-center space-x-1.5 text-indigo-800 font-bold text-xs mb-1">
+          <i class="fa-solid fa-lightbulb text-amber-500"></i>
+          <span>선생님의 1초 개념 정리 팁</span>
+        </div>
+        <p class="text-xs text-slate-700 leading-relaxed font-medium">
+          아이에게 이렇게 말해주세요:<br>
+          <span class="text-indigo-700 font-bold">"품사는 태어난 재료(밀가루)고, 성분은 식탁 위의 요리(빵, 파스타)야!"</span>
+        </p>
+      </div>
+    </aside>
+
+    <!-- Center/Right Content Area -->
+    <main class="flex-1 flex flex-col overflow-y-auto bg-slate-50 relative" id="mainScrollArea">
+      
+      <!-- Top Overview Banner -->
+      <div id="contentHeader" class="bg-white border-b border-slate-200 p-6 shadow-xs">
+        <!-- Injected by JS -->
+      </div>
+
+      <!-- Main Dynamic Content Container -->
+      <div id="lessonContentContainer" class="p-6 space-y-6 max-w-5xl mx-auto w-full">
+        <!-- Injected by JS -->
+      </div>
+    </main>
+
+    <!-- Overlay Canvas for iPad Pen Drawing -->
+    <canvas id="drawingCanvas" class="absolute inset-0 pointer-events-none z-40 w-full h-full"></canvas>
+
+    <!-- Pen Floating Toolbar -->
+    <div id="penToolbar" class="hidden absolute bottom-6 right-6 z-50 bg-white border border-slate-300 shadow-2xl rounded-2xl p-2.5 flex items-center space-x-3 backdrop-blur-lg">
+      <div class="flex items-center space-x-1.5 border-r border-slate-200 pr-3">
+        <button class="pen-color-btn w-6 h-6 rounded-full bg-red-500 ring-2 ring-offset-2 ring-transparent transition" data-color="#ef4444"></button>
+        <button class="pen-color-btn w-6 h-6 rounded-full bg-blue-600 ring-2 ring-offset-2 ring-blue-600 transition" data-color="#2563eb"></button>
+        <button class="pen-color-btn w-6 h-6 rounded-full bg-amber-500 ring-2 ring-offset-2 ring-transparent transition" data-color="#f59e0b"></button>
+        <button class="pen-color-btn w-6 h-6 rounded-full bg-emerald-600 ring-2 ring-offset-2 ring-transparent transition" data-color="#059669"></button>
+      </div>
+      <div class="flex items-center space-x-1 border-r border-slate-200 pr-3">
+        <button id="penSizeThin" class="px-2 py-1 text-xs rounded bg-slate-100 hover:bg-slate-200 font-bold">Thin</button>
+        <button id="penSizeThick" class="px-2 py-1 text-xs rounded bg-blue-100 text-blue-700 font-bold">Thick</button>
+      </div>
+      <button id="clearCanvasBtn" class="px-2.5 py-1 text-xs font-semibold text-rose-600 hover:bg-rose-50 rounded-lg transition flex items-center space-x-1">
+        <i class="fa-solid fa-trash-can"></i>
+        <span>지우기</span>
+      </button>
+      <button id="closePenBtn" class="p-1.5 text-slate-400 hover:text-slate-700 rounded-lg">
+        <i class="fa-solid fa-xmark text-sm"></i>
+      </button>
+    </div>
+
+  </div>
+
+  <!-- Interactive Modal for Chunk & Word Analysis -->
+  <div id="componentDetailModal" class="hidden fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 transform transition-all scale-95 opacity-0 duration-150" id="modalCard">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div>
+          <span id="modalChunkText" class="text-xl font-black text-slate-900">Chunk</span>
+          <span id="modalRoleBadge" class="ml-2 text-xs font-bold px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-700">성분</span>
+        </div>
+        <button id="closeModalBtn" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="mt-4 space-y-3">
+        <div>
+          <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">들어간 품사 (Parts of Speech)</p>
+          <p id="modalPosDetail" class="text-sm font-semibold text-slate-800 mt-0.5"></p>
+        </div>
+        <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+          <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">문장에서의 핵심 역할 & 이유</p>
+          <p id="modalReason" class="text-xs text-slate-700 mt-1 leading-relaxed font-medium"></p>
+        </div>
+        <div class="bg-amber-50 p-3 rounded-xl border border-amber-100 text-xs text-amber-900">
+          <p class="font-bold mb-0.5"><i class="fa-solid fa-star text-amber-500 mr-1"></i>선생님 맞춤 질문 가이드</p>
+          <p id="modalTeacherQuestion" class="leading-relaxed"></p>
+        </div>
+      </div>
+      <button id="modalConfirmBtn" class="w-full mt-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl text-sm transition">
+        확인 완료!
+      </button>
+    </div>
+  </div>
+
+  <!-- Master Data Store: Components & 5 Patterns -->
+  <script>
+    // 1. Sentence Components Data (4 Major Components + Modifiers)
+    const componentsData = [
+      {
+        id: "subject",
+        symbol: "S",
+        nameKr: "주어 (Subject)",
+        nameEn: "Subject (S)",
+        colorClass: "text-blue-700 bg-blue-100 border-blue-300",
+        pillBg: "bg-blue-600 text-white",
+        oneLiner: "문장의 주인공! '누가/무엇이' 동작이나 상태의 주인인가?",
+        definition: "동사가 나타내는 동작이나 상태의 주체가 되는 말로, 한국어 해석 시 <strong>[은, 는, 이, 가]</strong>가 붙는 자리입니다.",
+        // 품사 매칭 테이블
+        allowedParts: [
+          { pos: "명사 (Noun)", example: "<u>Leo</u> reads books.", note: "가장 기본이 되는 주인공 단어" },
+          { pos: "대명사 (Pronoun)", example: "<u>She</u> is smart.", note: "주격 대명사(I, you, he, she, we, they)만 가능!" },
+          { pos: "동명사구 (V-ing)", example: "<u>Swimming in the sea</u> is fun.", note: "'~하는 것'으로 해석되며 단수 취급" },
+          { pos: "to부정사구 (to V)", example: "<u>To learn English</u> is easy.", note: "'~하는 것'으로 주어 역할 가능" },
+          { pos: "명사절 (That / What절)", example: "<u>That he is honest</u> is true.", note: "완전한 문장이 명사 덩어리가 되어 주어로 출동" }
+        ],
+        forbiddenParts: [
+          { pos: "형용사 단독", reason: "Happy is important (X) ➡️ Happiness(명사)로 써야 함" },
+          { pos: "부사", reason: "Quickly runs fast (X) ➡️ 부사는 주어 자리에 절대 못 옴" },
+          { pos: "목적격/소유격 대명사", reason: "Him is kind (X) ➡️ 주격인 He를 써야 함" }
+        ],
+        positionRule: "일반적으로 [동사 바로 앞] 문장의 맨 앞자리를 차지합니다. (단, 의문문이나 도치 구문 제외)",
+        teacherScript: "“OO야, 영화를 보면 맨 앞 크레딧에 주연 배우 이름이 딱 나오지? 문장에서 그 주연 배우가 바로 '주어(S)'야. 주어 자리에는 오직 '명사 가문'만 들어갈 수 있어! 순수 명사, 대명사, 그리고 명사 옷을 입은 동명사(-ing)나 to부정사까지! 형용사나 부사가 주어 자리에 앉으려고 하면 '넌 자격증 없어!' 하고 쫓아내면 돼!”",
+        examTraps: "한국 시험 1등 함정: 동명사 주어(Reading books)가 주어로 올 때 books가 복수라고 동사에 are를 쓰게 유도함! ➡️ 동명사 주어는 무조건 단수 취급(is)!",
+        examples: [
+          {
+            sentence: "Leo plays the piano beautifully.",
+            translation: "레오는 피아노를 아름답게 쳐요.",
+            chunks: [
+              { text: "Leo", role: "주어 (S)", pos: "고유명사 (단수)", reason: "문장 맨 앞에서 피아노를 치는 동작의 주체", prompt: "누가 피아노를 쳐? 'Leo'가 치니까 주어!" },
+              { text: "plays", role: "동사 (V)", pos: "일반동사 (현재 3단수)", reason: "주어 Leo의 행동", prompt: "주어 바로 뒤 엔진!" },
+              { text: "the piano", role: "목적어 (O)", pos: "명사구", reason: "치는 대상(을/를)", prompt: "무엇을 쳐? 피아노를!" },
+              { text: "beautifully", role: "수식어 (M)", pos: "부사", reason: "동작을 꾸며주는 양념", prompt: "어떻게 쳐? 아름답게!" }
+            ]
+          },
+          {
+            sentence: "Eating fresh vegetables is good for your health.",
+            translation: "신선한 채소를 먹는 것은 건강에 좋아요.",
+            chunks: [
+              { text: "Eating fresh vegetables", role: "주어 (S)", pos: "동명사구 (Eating + 목적어)", reason: "채소를 '먹는 것'이라는 행위 덩어리가 주어", prompt: "vegetables가 복수지만 주어의 핵심은 'Eating(먹는 것)' 단수!" },
+              { text: "is", role: "동사 (V)", pos: "be동사 (단수)", reason: "동명사 주어에 맞춘 단수 동사", prompt: "are가 아니라 is인 이유를 아이에게 물어보세요!" },
+              { text: "good", role: "보어 (C)", pos: "형용사", reason: "주어의 상태를 설명", prompt: "채소 먹는 게 어떤 상태? 좋은 상태!" },
+              { text: "for your health", role: "수식어 (M)", pos: "전치사구", reason: "건강을 위해라는 조건 수식", prompt: "어디에 좋은지 안내!" }
+            ]
+          },
+          {
+            sentence: "They built a secret treehouse last summer.",
+            translation: "그들은 지난여름 비밀 나무 오두막을 지었어요.",
+            chunks: [
+              { text: "They", role: "주어 (S)", pos: "인칭대명사 (주격)", reason: "지은 사람들을 대신하는 주격 대명사", prompt: "Them이나 Their는 주어 자리에 절대 못 옴!" },
+              { text: "built", role: "동사 (V)", pos: "일반동사 (과거)", reason: "짓다(build)의 과거 동작", prompt: "과거에 일어난 엔진 동작!" },
+              { text: "a secret treehouse", role: "목적어 (O)", pos: "명사구", reason: "지은 대상물", prompt: "무엇을 지었어? 오두막을!" },
+              { text: "last summer", role: "수식어 (M)", pos: "시간 부사구", reason: "시점을 알려주는 양념", prompt: "언제 지었는지 안내!" }
+            ]
+          },
+          {
+            sentence: "To master English grammar requires regular practice.",
+            translation: "영어 문법을 마스터하는 것은 꾸준한 연습을 필요로 해요.",
+            chunks: [
+              { text: "To master English grammar", role: "주어 (S)", pos: "to부정사구", reason: "'마스터하는 것'이라는 동작 명사화 덩어리", prompt: "to부정사도 주어 자리에 당당히 올 수 있어요!" },
+              { text: "requires", role: "동사 (V)", pos: "일반동사 (3단수 -s)", reason: "to부정사 주어는 단수이므로 requires", prompt: "단수 취급 시험 포인트!" },
+              { text: "regular practice", role: "목적어 (O)", pos: "명사구", reason: "필요로 하는 대상", prompt: "무엇을 필요로 해?" }
+            ]
+          },
+          {
+            sentence: "That she told the truth surprised everyone.",
+            translation: "그녀가 진실을 말했다는 사실은 모두를 놀라게 했어요.",
+            chunks: [
+              { text: "That she told the truth", role: "주어 (S)", pos: "명사절 (접속사 that + 완전한 문장)", reason: "'그녀가 진실을 말했다는 것' 전체가 주어", prompt: "문장 통째로 명사 주어가 된 고급 구조!" },
+              { text: "surprised", role: "동사 (V)", pos: "타동사 (과거)", reason: "놀라게 만들었다는 감정 유발", prompt: "놀라게 한 엔진 동작!" },
+              { text: "everyone", role: "목적어 (O)", pos: "부정대명사", reason: "놀란 대상들", prompt: "누구를 놀라게 했어?" }
+            ]
+          }
+        ],
+        quiz: {
+          question: "한국 학교 시험 단골 낚시 문제! 빈칸에 알맞은 동사의 형태는?",
+          sentenceText: "[ Making new friends in the camp ] ( &nbsp;?&nbsp; ) not easy for timid kids.",
+          options: ["are (복수 동사)", "is (단수 동사)", "be (동사원형)", "were (과거 복수)"],
+          correctIndex: 1,
+          explanation: "friends 뒤에 -s가 붙어 있어서 복수처럼 보이지만, 주어의 진짜 주인공은 친구들을 [만드는 것(Making: 동명사)]이에요! 동명사 주어는 셀 수 없는 하나의 덩어리이므로 무조건 단수 동사 [is]를 써야 정답입니다!"
+        }
+      },
+      {
+        id: "verb",
+        symbol: "V",
+        nameKr: "동사 / 서술어 (Verb)",
+        nameEn: "Verb (V)",
+        colorClass: "text-amber-700 bg-amber-100 border-amber-300",
+        pillBg: "bg-amber-500 text-white",
+        oneLiner: "문장의 심장 엔진! 주어가 '무엇을 하거나 어떤 상태인지' 밝혀줌",
+        definition: "주어의 동작이나 상태를 서술하는 중심 엔진으로, 한국어 해석 시 <strong>[~다, ~이다, ~하다]</strong>로 끝나는 말입니다.",
+        allowedParts: [
+          { pos: "be동사 (am, is, are, was, were)", example: "She <u>is</u> a doctor.", note: "상태(~이다, 있다)를 나타냄" },
+          { pos: "일반동사 (run, eat, love...)", example: "They <u>run</u> every day.", note: "구체적 몸동작이나 감정을 나타냄" },
+          { pos: "조동사 + 동사원형 (can run, will go)", example: "He <u>can swim</u>.", note: "동사 엔진에 능력·미래 양념을 더함" }
+        ],
+        forbiddenParts: [
+          { pos: "동명사(-ing) 단독", reason: "He playing soccer (X) ➡️ He is playing으로 be동사 엔진 필요" },
+          { pos: "to부정사 단독", reason: "She to sleep (X) ➡️ to부정사는 단독으로 문장의 서술어(V)가 못 됨" },
+          { pos: "형용사 단독", reason: "The soup delicious (X) ➡️ The soup is delicious로 be동사 필요" }
+        ],
+        positionRule: "평서문 기준 무조건 [주어 바로 뒤]에 오며, 문장의 형식을 결정짓는 핵심 키(Key)입니다.",
+        teacherScript: "“OO야, 스포츠카에 아무리 좋은 타이어랑 문짝이 있어도 엔진이 없으면 그냥 고철 덩어리지? 문장에서 그 심장 엔진이 바로 동사(V)야. 영어 문장은 무조건 동사 하나가 살아 숨 쉬어야 해. -ing나 to는 동사에 튜닝 부품을 단 거라서 단독 엔진이 못 돼. 오직 be동사, 일반동사, 조동사+동사원형만이 V 자리에 설 수 있어!”",
+        examTraps: "주어 뒤에 수식어가 길게 붙어 있을 때 진짜 동사(V) 자리에 능청스럽게 -ing나 to-v를 넣어두고 틀린 것 찾으라는 문제!",
+        examples: [
+          {
+            sentence: "The little bird sings cheerfully in the morning.",
+            translation: "작은 새가 아침에 쾌활하게 노래해요.",
+            chunks: [
+              { text: "The little bird", role: "주어 (S)", pos: "명사구 (단수)", reason: "노래하는 주인공", prompt: "누가 노래해? 작은 새가!" },
+              { text: "sings", role: "동사 (V)", pos: "자동사 (현재 3단수)", reason: "새가 하는 동작 엔진", prompt: "새가 무엇을 해? 노래해(sings)!" },
+              { text: "cheerfully", role: "수식어 (M)", pos: "양태 부사", reason: "노래하는 방식을 수식", prompt: "어떻게 노래해? 쾌활하게!" },
+              { text: "in the morning", role: "수식어 (M)", pos: "시간 전치사구", reason: "노래하는 시간대", prompt: "언제 노래해?" }
+            ]
+          },
+          {
+            sentence: "Minho and Yuna are best friends.",
+            translation: "민호와 유나는 가장 친한 친구예요.",
+            chunks: [
+              { text: "Minho and Yuna", role: "주어 (S)", pos: "고유명사 2개 (복수)", reason: "친구인 두 사람", prompt: "2명이니까 복수 주어!" },
+              { text: "are", role: "동사 (V)", pos: "be동사 (복수 현재)", reason: "상태(~이다)를 연결하는 동사 엔진", prompt: "주어가 2명이니까 are!" },
+              { text: "best friends", role: "보어 (C)", pos: "명사구 (주격보어)", reason: "주어의 정체를 설명", prompt: "민호와 유나가 누구야? 베프!" }
+            ]
+          },
+          {
+            sentence: "My brother can speak three languages fluently.",
+            translation: "내 남동생은 3개 국어를 유창하게 말할 수 있어요.",
+            chunks: [
+              { text: "My brother", role: "주어 (S)", pos: "명사구", reason: "말하는 주인공", prompt: "남동생이 주어!" },
+              { text: "can speak", role: "동사 (V)", pos: "조동사 + 동사원형", reason: "말할 수 있다는 능력 엔진", prompt: "조동사 can 뒤에는 무조건 동사원형!" },
+              { text: "three languages", role: "목적어 (O)", pos: "명사구", reason: "말하는 대상 언어들", prompt: "무엇을 말해?" },
+              { text: "fluently", role: "수식어 (M)", pos: "부사", reason: "말하는 유창함의 정도 수식", prompt: "어떻게 말해? 유창하게!" }
+            ]
+          },
+          {
+            sentence: "The delicious pizza smells very sweet.",
+            translation: "그 맛있는 피자는 매우 달콤한 냄새가 나요.",
+            chunks: [
+              { text: "The delicious pizza", role: "주어 (S)", pos: "명사구", reason: "냄새를 풍기는 주인공 피자", prompt: "피자가 주인공!" },
+              { text: "smells", role: "동사 (V)", pos: "감각동사 (2형식)", reason: "후각 상태를 서술하는 감각 엔진", prompt: "감각동사 뒤에는 무조건 형용사 보어!" },
+              { text: "very sweet", role: "보어 (C)", pos: "부사 + 형용사", reason: "피자의 냄새 상태 보충", prompt: "sweetly(부사) 쓰면 틀리는 시험 1등 포인트!" }
+            ]
+          },
+          {
+            sentence: "The coach made the players run ten laps.",
+            translation: "코치님은 선수들에게 열 바퀴를 달리게 시켰어요.",
+            chunks: [
+              { text: "The coach", role: "주어 (S)", pos: "명사구", reason: "명령을 내린 주체", prompt: "코치님이 주어!" },
+              { text: "made", role: "동사 (V)", pos: "사역동사 (5형식 강제 엔진)", reason: "선수들에게 강제로 동작을 시킴", prompt: "사역동사 make의 과거형!" },
+              { text: "the players", role: "목적어 (O)", pos: "명사구", reason: "명령을 받은 대상들", prompt: "누구한테 시켰어?" },
+              { text: "run ten laps", role: "목적격 보어 (OC)", pos: "원형부정사구", reason: "선수들이 실제로 하는 행동", prompt: "사역동사 때문에 to run이 아닌 원형 run!" }
+            ]
+          }
+        ],
+        quiz: {
+          question: "문장의 진짜 '동사(V)' 자리를 찾는 시험 문제! 올바른 문장은?",
+          sentenceText: "Which sentence has a REAL verb engine? [ A vs B ]",
+          options: [
+            "The boy playing the guitar on the stage.",
+            "The boy is playing the guitar on the stage.",
+            "The boy to play the guitar on the stage.",
+            "The boy played guitar happily yesterday night."
+          ],
+          correctIndex: 1,
+          explanation: "-ing나 to-는 단독으로 동사(V) 엔진이 될 수 없어요! be동사 'is'가 함께 결합되어 [is playing]이 되어야 비로소 완전한 동사 엔진이 작동합니다! (D번도 과거동사지만 관사 빠짐 등의 이유로 2번이 가장 명확한 be+ing 완전 동사입니다)"
+        }
+      },
+      {
+        id: "object",
+        symbol: "O",
+        nameKr: "목적어 (Object)",
+        nameEn: "Object (O)",
+        colorClass: "text-emerald-700 bg-emerald-100 border-emerald-300",
+        pillBg: "bg-emerald-600 text-white",
+        oneLiner: "동사의 먹잇감! '누구를? 무엇을? 누구에게?' 당하는 대상",
+        definition: "타동사가 가하는 동작의 직접적인 대상이 되는 말로, 한국어 해석 시 <strong>[~을, ~를]</strong> (직접목적어) 또는 <strong>[~에게]</strong> (간접목적어)로 해석됩니다.",
+        allowedParts: [
+          { pos: "명사 / 명사구", example: "I love <u>chocolate ice cream</u>.", note: "가장 일반적인 대상" },
+          { pos: "목적격 대명사", example: "She helped <u>him</u>.", note: "me, you, him, her, it, us, them 필수!" },
+          { pos: "동명사구 (V-ing)", example: "He enjoys <u>playing tennis</u>.", note: "enjoy, finish, avoid 뒤 목적어" },
+          { pos: "to부정사구 (to V)", example: "I want <u>to buy a new toy</u>.", note: "want, hope, decide 뒤 목적어" },
+          { pos: "명사절", example: "I know <u>that you are kind</u>.", note: "문장 통째가 목적어 덩어리" }
+        ],
+        forbiddenParts: [
+          { pos: "주격 대명사", reason: "I like he (X) ➡️ 목적격 him을 써야 함" },
+          { pos: "형용사 단독", reason: "I want delicious (X) ➡️ I want delicious food(명사)로 목적어 완성" },
+          { pos: "부사", reason: "She bought quickly (X) ➡️ 부사는 목적어가 될 수 없음" }
+        ],
+        positionRule: "타동사 바로 뒤에 위치합니다. (4형식의 경우 [간접목적어(~에게) + 직접목적어(~을/를)] 순서로 2개가 연달아 옴)",
+        teacherScript: "“OO야, 사자가 사냥을 하려면 먹잇감이 필요하지? 동사가 먹는 그 먹잇감이 바로 '목적어(O)'야. 'I eat'만 말하고 멈추면 듣는 사람이 '뭘 먹는데?!' 하고 답답하지? '피자를(pizza)'이라고 먹잇감을 던져줘야 해. 목적어 자리에도 주어처럼 오직 '명사 패밀리'만 들어갈 수 있어!”",
+        examTraps: "자동사와 타동사 낚시: discuss about the matter(X) ➡️ discuss는 타동사라 뒤에 about 같은 전치사 없이 곧바로 목적어 명사가 와야 함!",
+        examples: [
+          {
+            sentence: "Leo loves reading adventure stories.",
+            translation: "레오는 모험 이야기 읽는 것을 매우 좋아해요.",
+            chunks: [
+              { text: "Leo", role: "주어 (S)", pos: "고유명사", reason: "좋아하는 주인공", prompt: "누가 좋아해?" },
+              { text: "loves", role: "동사 (V)", pos: "타동사", reason: "사랑하는 감정 엔진", prompt: "무엇을 좋아하는지 먹잇감 필요!" },
+              { text: "reading adventure stories", role: "목적어 (O)", pos: "동명사구", reason: "loves의 직접적인 대상(~하는 것을)", prompt: "책 읽는 것(동명사)이 통째로 목적어!" }
+            ]
+          },
+          {
+            sentence: "Dad bought me a fantastic bicycle.",
+            translation: "아빠가 나에게 환상적인 자전거를 사주셨어요.",
+            chunks: [
+              { text: "Dad", role: "주어 (S)", pos: "명사", reason: "사준 사람", prompt: "아빠가 주어!" },
+              { text: "bought", role: "동사 (V)", pos: "수여동사 (4형식)", reason: "사주다 엔진", prompt: "선물 주는 동사는 목적어 2개!" },
+              { text: "me", role: "간접목적어 (IO)", pos: "목적격 대명사", reason: "받는 사람(~에게)", prompt: "누구에게 사줬어? 나에게!" },
+              { text: "a fantastic bicycle", role: "직접목적어 (DO)", pos: "명사구", reason: "받은 물건(~을/를)", prompt: "무엇을 사줬어? 자전거를!" }
+            ]
+          },
+          {
+            sentence: "We should protect wild animals and nature.",
+            translation: "우리는 야생 동물들과 자연을 보호해야 해요.",
+            chunks: [
+              { text: "We", role: "주어 (S)", pos: "주격 대명사", reason: "보호하는 우리", prompt: "우리가 주어!" },
+              { text: "should protect", role: "동사 (V)", pos: "조동사 + 타동사", reason: "보호해야 한다는 엔진", prompt: "무엇을 보호할까?" },
+              { text: "wild animals and nature", role: "목적어 (O)", pos: "접속사로 연결된 명사구 2개", reason: "보호받는 먹잇감 대상", prompt: "동물들과 자연을!" }
+            ]
+          },
+          {
+            sentence: "She decided to study medicine at university.",
+            translation: "그녀는 대학교에서 의학을 공부하기로 결심했어요.",
+            chunks: [
+              { text: "She", role: "주어 (S)", pos: "대명사", reason: "결심한 사람", prompt: "그녀가 주어!" },
+              { text: "decided", role: "동사 (V)", pos: "타동사 (to부정사 짝꿍)", reason: "결심하다 엔진", prompt: "무엇을 결심했어?" },
+              { text: "to study medicine", role: "목적어 (O)", pos: "to부정사구", reason: "결심한 내용(~할 것을)", prompt: "decide 뒤에는 ing가 아니라 to부정사 목적어!" },
+              { text: "at university", role: "수식어 (M)", pos: "장소 전치사구", reason: "장소 안내 양념", prompt: "어디서 공부할 건지 수식!" }
+            ]
+          },
+          {
+            sentence: "Everyone knows that honest effort never lies.",
+            translation: "정직한 노력은 결코 배신하지 않는다는 것을 모두가 알아요.",
+            chunks: [
+              { text: "Everyone", role: "주어 (S)", pos: "부정대명사 (단수)", reason: "알고 있는 주인공들", prompt: "모두가 주어!" },
+              { text: "knows", role: "동사 (V)", pos: "타동사", reason: "알다 엔진", prompt: "무엇을 알고 있어?" },
+              { text: "that honest effort never lies", role: "목적어 (O)", pos: "명사절 (접속사 that절)", reason: "알고 있는 지식의 내용 전체", prompt: "문장 통째가 목적어 먹잇감으로 꿀꺽!" }
+            ]
+          }
+        ],
+        quiz: {
+          question: "목적어 자리에 들어갈 수 없는 품사를 고르세요!",
+          sentenceText: "Which one CANNOT be an Object (O) in a sentence?",
+          options: [
+            "명사 (a puppy)",
+            "목적격 대명사 (him)",
+            "부사 (softly / gently)",
+            "동명사구 (playing games)"
+          ],
+          correctIndex: 2,
+          explanation: "부사(softly, gently)는 문장을 꾸며주는 '양념(Modifier)'일 뿐, 동사의 직접적인 먹잇감인 목적어(O) 자리에는 절대 들어갈 수 없어요! 목적어는 오직 명사 패밀리만 가능합니다!"
+        }
+      },
+      {
+        id: "complement",
+        symbol: "C",
+        nameKr: "보어 (Complement)",
+        nameEn: "Complement (C)",
+        colorClass: "text-purple-700 bg-purple-100 border-purple-300",
+        pillBg: "bg-purple-600 text-white",
+        oneLiner: "2% 부족한 문장을 채워주는 '보충 설명 도우미' (Helper)",
+        definition: "주어나 목적어만으로는 뜻이 불완전할 때, 그 성질·신분·상태를 보충 설명해주는 필수 성분입니다. (주격보어 SC, 목적격보어 OC)",
+        allowedParts: [
+          { pos: "명사 (Noun)", example: "He became <u>a hero</u>.", note: "주어/목적어와 [동격(신분)] 관계 형성" },
+          { pos: "형용사 (Adjective)", example: "The soup is <u>hot</u>.", note: "주어/목적어의 [상태·성질]을 설명" },
+          { pos: "to부정사 / 원형부정사", example: "My dream is <u>to fly</u>. / She made me <u>smile</u>.", note: "보어로 동작을 설명" },
+          { pos: "분사 (현재분사 -ing / 과거분사 p.p.)", example: "I saw him <u>running</u>.", note: "진행되거나 당하는 상태 보충" }
+        ],
+        forbiddenParts: [
+          { pos: "★ 부사 (-ly)", reason: "The flower smells sweetly (X) ➡️ smells sweet(형용사)!" },
+          { pos: "전치사 단독", reason: "전치사는 혼자 보어가 되지 못함" }
+        ],
+        positionRule: "2형식에서는 be동사/감각동사 [바로 뒤], 5형식에서는 [목적어 바로 뒤]에 위치합니다.",
+        teacherScript: "“OO야, 'She is...' 하고 말을 끝내면 어때? '그녀가 누군데? 어떤 상태인데?' 하고 궁금해서 미치겠지? 이렇게 2% 부족한 곳에 쏙 들어가서 완벽하게 보충해주는 녀석이 '보어(C)'야. Complement의 C! 한국 시험 1등 공식: 보어 자리에는 [명사]랑 [형용사]만 들어갈 수 있어. 한국말로 '~하게'라고 해석된다고 부사(-ly)를 쓰면 100% 빨간 줄 쫙 그어지는 함정이야!”",
+        examTraps: "★ 전국 중·고교 문법 시험 1등 킬러 문항: 감각동사(look, smell, taste, sound, feel) 뒤에 형용사 대신 부사(-ly) 써놓고 맞냐고 묻는 문제!",
+        examples: [
+          {
+            sentence: "She is a warm and caring doctor.",
+            translation: "그녀는 따뜻하고 배려심 넘치는 의사예요.",
+            chunks: [
+              { text: "She", role: "주어 (S)", pos: "대명사", reason: "주인공 그녀", prompt: "그녀가 누구야?" },
+              { text: "is", role: "동사 (V)", pos: "be동사 (2형식 연결)", reason: "연결 다리 엔진", prompt: "is 뒤에 보충 설명 필요!" },
+              { text: "a warm and caring doctor", role: "주격보어 (SC)", pos: "명사구", reason: "주어 She = doctor (동격 신분)", prompt: "She의 정체를 명사로 완벽 보충!" }
+            ]
+          },
+          {
+            sentence: "The classical music sounds peaceful.",
+            translation: "그 클래식 음악은 평화롭게 들려요.",
+            chunks: [
+              { text: "The classical music", role: "주어 (S)", pos: "명사구", reason: "들리는 음악", prompt: "음악이 주인공!" },
+              { text: "sounds", role: "동사 (V)", pos: "감각동사", reason: "청각 감각 엔진", prompt: "어떻게 들려?" },
+              { text: "peaceful", role: "주격보어 (SC)", pos: "형용사", reason: "음악의 상태를 설명하는 보어", prompt: "한국말로 평화롭게 들려도 peacefully(부사) 쓰면 절대 안 됨!" }
+            ]
+          },
+          {
+            sentence: "The comedy movie made us very happy.",
+            translation: "그 코미디 영화는 우리를 매우 행복하게 만들었어요.",
+            chunks: [
+              { text: "The comedy movie", role: "주어 (S)", pos: "명사구", reason: "만든 원인", prompt: "영화가 주어!" },
+              { text: "made", role: "동사 (V)", pos: "불완전타동사 (5형식)", reason: "만들다 엔진", prompt: "우리를 어떻게 만들었어?" },
+              { text: "us", role: "목적어 (O)", pos: "목적격 대명사", reason: "영향을 받은 대상", prompt: "누구를?" },
+              { text: "very happy", role: "목적격보어 (OC)", pos: "부사 + 형용사", reason: "우리의 감정 상태를 보충", prompt: "우리가 행복한 거니까 happily(X) ➡️ happy(O)!" }
+            ]
+          },
+          {
+            sentence: "We elected Minho our class president.",
+            translation: "우리는 민호를 우리 반 회장으로 뽑았어요.",
+            chunks: [
+              { text: "We", role: "주어 (S)", pos: "대명사", reason: "뽑은 주체들", prompt: "우리가 주어!" },
+              { text: "elected", role: "동사 (V)", pos: "5형식 타동사", reason: "선출하다 엔진", prompt: "민호를 무엇으로 뽑았어?" },
+              { text: "Minho", role: "목적어 (O)", pos: "고유명사", reason: "선출된 대상", prompt: "민호를!" },
+              { text: "our class president", role: "목적격보어 (OC)", pos: "명사구", reason: "목적어 Minho = president (신분 동격)", prompt: "Minho의 새로운 자격을 설명!" }
+            ]
+          },
+          {
+            sentence: "The teacher told the students to be quiet.",
+            translation: "선생님께서는 학생들에게 조용히 하라고 말씀하셨어요.",
+            chunks: [
+              { text: "The teacher", role: "주어 (S)", pos: "명사구", reason: "말씀하신 분", prompt: "선생님이 주어!" },
+              { text: "told", role: "동사 (V)", pos: "5형식 타동사 (tell의 과거)", reason: "말하다 엔진", prompt: "누구에게 뭐라고 하셨어?" },
+              { text: "the students", role: "목적어 (O)", pos: "명사구", reason: "듣는 대상들", prompt: "학생들에게!" },
+              { text: "to be quiet", role: "목적격보어 (OC)", pos: "to부정사구", reason: "학생들이 해야 할 미래 행동 보충", prompt: "tell 목적어 뒤에는 to부정사 보어!" }
+            ]
+          }
+        ],
+        quiz: {
+          question: "전국 중학교 내신 1등 문제! 빈칸에 알맞은 단어는?",
+          sentenceText: "The fresh lemon tastes extremely ( &nbsp;?&nbsp; ). (신선한 레몬은 극도로 시다)",
+          options: ["sour (신: 형용사)", "sourly (시게: 부사)", "sourness (신맛: 명사)", "to sour (동사)"],
+          correctIndex: 0,
+          explanation: "'taste'는 맛을 느끼는 2형식 감각동사예요! 한국말로 해석하면 '시게 맛이 난다'처럼 부사 같지만, 영어에서는 주어 레몬의 상태를 설명하는 보어 자리이므로 무조건 순수한 형용사 [sour]를 써야 정답입니다!"
+        }
+      },
+      {
+        id: "modifier",
+        symbol: "M",
+        nameKr: "수식어 (Modifier)",
+        nameEn: "Modifier (M)",
+        colorClass: "text-slate-700 bg-slate-100 border-slate-300",
+        pillBg: "bg-slate-600 text-white",
+        oneLiner: "문장의 맛을 더하는 '조미료 & 악세서리'! (없어도 뼈대는 유지)",
+        definition: "문장의 4대 필수 뼈대(S, V, O, C)는 아니지만, 시간·장소·이유·방법 등을 덧붙여 문장을 생생하게 꾸며주는 수식 요소입니다.",
+        allowedParts: [
+          { pos: "부사 / 부사구", example: "He runs <u>very quickly</u>.", note: "동작, 형용사를 양념처럼 수식" },
+          { pos: "전치사구 (전치사 + 명사)", example: "We met <u>in the park</u> <u>at 3 PM</u>.", note: "장소, 시간, 방법 등을 나타내는 가장 흔한 수식어" },
+          { pos: "형용사구 / 관계사절", example: "The boy <u>with blue eyes</u> smiled.", note: "명사를 길게 뒤에서 꾸밈" }
+        ],
+        forbiddenParts: [
+          { pos: "주의사항", reason: "수식어(M)는 문장의 형식(1~5형식)을 셀 때 절대로 개수에 포함하지 않음!" }
+        ],
+        positionRule: "문장 맨 앞, 중간, 맨 끝 어디든 자유롭게 올 수 있습니다.",
+        teacherScript: "“OO야, 햄버거에 양상추나 케첩 없어도 패티랑 빵만 있으면 햄버거지? 수식어(M)가 바로 그 케첩과 피클이야. 문장을 더 맛있고 풍성하게 해주지만, 1형식인지 5형식인지 문장 형식을 셀 때는 싹 발라내고 뼈대(S, V, O, C)만 봐야 해!”",
+        examTraps: "문장이 4줄씩 엄청 길어져서 어려워 보이지만, 전치사구와 부사(M)를 괄호로 묶어 지우면 1형식이나 3형식에 불과한 시험 독해 지문 함정!",
+        examples: [
+          {
+            sentence: "Early in the morning, the birds sing happily on the tree.",
+            translation: "이른 아침에, 새들이 나무 위에서 행복하게 노래해요.",
+            chunks: [
+              { text: "Early in the morning", role: "수식어 (M)", pos: "시간 전치사구", reason: "시간을 꾸며주는 양념", prompt: "문장 맨 앞 시간 양념!" },
+              { text: "the birds", role: "주어 (S)", pos: "명사구", reason: "주인공 새들", prompt: "진짜 주인공 뼈대!" },
+              { text: "sing", role: "동사 (V)", pos: "자동사 (1형식)", reason: "노래하다 엔진", prompt: "진짜 엔진 뼈대!" },
+              { text: "happily", role: "수식어 (M)", pos: "부사", reason: "방법을 꾸며주는 양념", prompt: "어떻게? 양념!" },
+              { text: "on the tree", role: "수식어 (M)", pos: "장소 전치사구", reason: "장소를 꾸며주는 양념", prompt: "어디서? 양념!" }
+            ]
+          }
+        ],
+        quiz: {
+          question: "다음 문장에서 수식어(M)를 싹 지우고 남는 진짜 문장의 형식 뼈대는 몇 개일까요? 'Yesterday, Tom slept deeply in his room.'",
+          sentenceText: "[ Yesterday ], Tom slept [ deeply ] [ in his room ].",
+          options: ["1개 (Tom)", "2개 (Tom slept = S + V)", "3개 (S + V + O)", "4개 (S + V + O + C)"],
+          correctIndex: 1,
+          explanation: "Yesterday(시간 M), deeply(방법 M), in his room(장소 M)은 모두 수식어(양념)예요! 다 걷어내고 나면 [Tom(S) + slept(V)] 딱 2단어로 이루어진 완벽한 1형식 문장입니다!"
+        }
+      }
+    ];
+
+    // 2. The 5 Sentence Patterns Data (1형식 ~ 5형식)
+    const patternsData = [
+      {
+        patternNum: 1,
+        title: "1형식 : [ 주어(S) + 완전자동사(V) ]",
+        formula: "S + V (+ 수식어 M...)",
+        coreConcept: "혼자서도 완벽하게 살아 숨 쉬는 솔로 동사 문형!",
+        whyThisVerb: "뒤에 보충 설명(보어 C)도 필요 없고, 먹잇감(목적어 O)도 필요 없이, 주어가 '그냥 존재하거나 스스로 움직이는' 것만으로 뜻이 100% 통하는 <strong>완전자동사</strong>들만 들어갈 수 있습니다.",
+        keyVerbs: [
+          { en: "오고 가는 이동 동사", list: "go, come, arrive, leave, fly, walk, run" },
+          { en: "살고 죽고 존재하는 동사", list: "live, die, exist, happen, occur, remain" },
+          { en: "자연 현상 / 기본 동작", list: "rain, snow, shine, rise, sleep, cry, smile" }
+        ],
+        teacherScript: "“OO야, 새가 날아갈 때 뒤에 다른 사람 필요해? 그냥 '새가 난다(Birds fly)' 하면 문장이 끝나지! 이게 1형식이야. 뒤에 'in the sky'나 'very high'처럼 말이 길게 붙어도 그건 전부 장소나 방법을 알려주는 악세서리(M)일 뿐이야. 뼈대는 딱 [주어 + 동사] 둘뿐이야!”",
+        examTraps: "★ 시험 100% 출제 함정: occur, happen, arrive 같은 1형식 자동사는 뒤에 목적어가 없으므로 <strong>수동태(be + p.p.)를 절대 만들 수 없음!</strong> (The accident was happened X ➡️ The accident happened O)",
+        examples: [
+          {
+            sentence: "The morning sun rises brightly in the east.",
+            translation: "아침 태양이 동쪽에서 밝게 떠올라요.",
+            analysis: "The morning sun(S) + rises(V) + brightly(M:부사) + in the east(M:전치사구)",
+            whyReason: "'떠오르다(rises)'는 목적어나 보어 없이 혼자서도 완벽한 1형식 동사입니다. 뒤의 단어들은 전부 양념(M)입니다."
+          },
+          {
+            sentence: "The great airplane arrived safely at the airport.",
+            translation: "그 거대한 비행기가 공항에 안전하게 도착했어요.",
+            analysis: "The great airplane(S) + arrived(V) + safely(M:부사) + at the airport(M:전치사구)",
+            whyReason: "arrive는 전치사 at의 도움을 받아 장소를 덧붙일 뿐, 동사 자체는 혼자 노는 1형식 자동사입니다."
+          },
+          {
+            sentence: "Many wild animals live in this deep forest.",
+            translation: "많은 야생 동물들이 이 깊은 숲속에 살아요.",
+            analysis: "Many wild animals(S) + live(V) + in this deep forest(M:전치사구)",
+            whyReason: "'살다(live)'는 주어의 존재를 나타내는 대표 1형식 동사입니다."
+          },
+          {
+            sentence: "The sudden traffic accident happened on the highway yesterday.",
+            translation: "어제 고속도로에서 갑작스러운 교통사고가 일어났어요.",
+            analysis: "The sudden traffic accident(S) + happened(V) + on the highway(M) + yesterday(M)",
+            whyReason: "★ 시험 빈출! happen(일어나다)은 1형식 동사이므로 수동태가 절대 불가능하며 혼자 문장을 완성합니다."
+          },
+          {
+            sentence: "The little baby smiled happily at her mother.",
+            translation: "어린 아기가 엄마를 보며 행복하게 미소 지었어요.",
+            analysis: "The little baby(S) + smiled(V) + happily(M) + at her mother(M)",
+            whyReason: "smile은 감정을 스스로 드러내는 1형식 자동사입니다."
+          }
+        ],
+        quiz: {
+          question: "한국 수능/내신 단골 어법 문제! 어법상 틀린 문장은?",
+          sentenceText: "Which sentence is grammatically WRONG?",
+          options: [
+            "The earthquake occurred in the midnight.",
+            "The earthquake was occurred in the midnight.",
+            "Birds sing beautifully in the trees.",
+            "She slept peacefully all night long."
+          ],
+          correctIndex: 1,
+          explanation: "'occur(발생하다)'는 1형식 완전자동사예요! 목적어가 없는 1형식 동사는 수동태(was occurred)로 절대 쓸 수 없어요. 능동태인 [occurred]로 써야 올바릅니다!"
+        }
+      },
+      {
+        patternNum: 2,
+        title: "2형식 : [ 주어(S) + 불완전자동사(V) + 주격보어(SC) ]",
+        formula: "S + V + C (주어 = 보어)",
+        coreConcept: "동사 혼자서는 2% 부족해서 주어를 보충해주는 도우미(C)가 필수인 문형!",
+        whyThisVerb: "목적어(먹잇감)는 필요 없지만, 동사 혼자서는 주어가 누구인지(신분) 또는 어떤 상태인지 설명할 수 없는 <strong>불완전자동사</strong>들이 들어갑니다. [주어(S) = 보어(C)]의 등식 성립!",
+        keyVerbs: [
+          { en: "상태 유지 / 존재 be동사류", list: "be (~이다), remain, stay, keep (~한 상태로 머물다)" },
+          { en: "상태 변화 동사 (~가 되다)", list: "become, get, grow, turn, come, go" },
+          { en: "5대 감각동사 (시험 1등!)", list: "look (~처럼 보이다), smell (~냄새나다), taste (~맛이나다), sound (~들리다), feel (~느껴지다)" }
+        ],
+        teacherScript: "“OO야, 'Tom became...' 하고 말을 멈추면 답답해서 쓰러지겠지? 'Tom이 뭐가 됐는데?!' 하고 궁금하잖아. 그래서 뒤에 의사(a doctor)나 유명해진(famous) 같은 '보충 설명 도우미(C)'를 데려와야 해. 2형식의 마법 공식은 바로 [주어 = 보어]! 톰이 의사고, 의사가 톰이지? 그리고 감각동사 뒤엔 무조건 형용사만 쓴다는 거 잊지 마!”",
+        examTraps: "★ 감각동사 5총사(look, smell, taste, sound, feel) 뒤에 한국말로는 '~하게'로 해석되어도 부사(-ly) 절대 금지! 오직 [형용사]만 올 수 있음!",
+        examples: [
+          {
+            sentence: "She remained calm and quiet during the crisis.",
+            translation: "그녀는 위기 상황 동안 침착하고 조용한 상태를 유지했어요.",
+            analysis: "She(S) + remained(V) + calm and quiet(SC:형용사 보어) + during the crisis(M)",
+            whyReason: "remain은 주어의 상태를 유지시키는 2형식 동사이며, 뒤에 형용사 보어가 필수입니다."
+          },
+          {
+            sentence: "This hot tomato soup tastes extremely delicious.",
+            translation: "이 뜨거운 토마토 수프는 극도로 맛있는 맛이 나요.",
+            analysis: "This hot tomato soup(S) + tastes(V:감각) + extremely delicious(SC:형용사 보어)",
+            whyReason: "taste는 감각동사이므로 delicious(형용사)가 보어로 와야 하며, deliciously(부사)는 오답입니다."
+          },
+          {
+            sentence: "His face turned red with anger.",
+            translation: "그의 얼굴은 분노로 빨갛게 변했어요.",
+            analysis: "His face(S) + turned(V:변화) + red(SC:형용사 보어) + with anger(M)",
+            whyReason: "turn은 색상이나 상태가 '~하게 변하다'라는 2형식 변화 동사입니다."
+          },
+          {
+            sentence: "Leo became a great scientist after years of study.",
+            translation: "레오는 수년간의 연구 끝에 위대한 과학자가 되었어요.",
+            analysis: "Leo(S) + became(V) + a great scientist(SC:명사 보어) + after years of study(M)",
+            whyReason: "became 뒤에 명사 보어가 와서 [Leo = 과학자]의 신분 동격을 완성합니다."
+          },
+          {
+            sentence: "Your suggestion sounds wonderful and practical.",
+            translation: "너의 제안은 멋지고 실용적으로 들려.",
+            analysis: "Your suggestion(S) + sounds(V:감각) + wonderful and practical(SC:형용사 보어)",
+            whyReason: "sound 뒤에 형용사 wonderful, practical이 와서 주어의 성질을 보충합니다."
+          }
+        ],
+        quiz: {
+          question: "빈칸에 들어갈 올바른 단어의 품사는? 'The milk turned ( &nbsp;?&nbsp; ) in the hot sun.'",
+          sentenceText: "The milk turned [ &nbsp;?&nbsp; ] in the hot sun. (우유가 상했다/시큼해졌다)",
+          options: ["sour (시큼한: 형용사)", "sourly (시큼하게: 부사)", "sourness (신맛: 명사)", "to sour (시게 되다)"],
+          correctIndex: 0,
+          explanation: "turn은 2형식 상태 변화 동사예요! 우유(주어)의 상태를 설명하는 보어 자리이므로 한국어 해석에 낚이지 말고 형용사 [sour]를 골라야 합니다!"
+        }
+      },
+      {
+        patternNum: 3,
+        title: "3형식 : [ 주어(S) + 완전타동사(V) + 목적어(O) ]",
+        formula: "S + V + O (주어 ≠ 목적어)",
+        coreConcept: "동사가 동작을 가하는 대상(먹잇감)이 반드시 필요한 문형!",
+        whyThisVerb: "주어 혼자 동작을 끝낼 수 없고, 반드시 동작의 대상인 <strong>목적어(~을/를)</strong>를 필요로 하는 <strong>완전타동사</strong>들이 들어갑니다. (2형식과 달리 [주어 ≠ 목적어] 관계!)",
+        keyVerbs: [
+          { en: "일상 필수 타동사", list: "eat, drink, read, write, buy, make, build, love, like, want" },
+          { en: "한국 시험 낚시 타동사 (전치사 쓰면 0점!)", list: "discuss (about 쓰면 X!), marry (with 쓰면 X!), reach (at 쓰면 X!), enter (into 쓰면 X!)" }
+        ],
+        teacherScript: "“OO야, 2형식과 3형식 구별법 초간단 비법 알려줄게! 'I am a boy'는 내가 소년이니까 [나 = 소년(2형식)]이지? 근데 'I love pizza'는 내가 피자야? 아니지! [나 ≠ 피자(3형식)]잖아! 주어랑 뒤에 나온 단어가 다른 존재면 목적어(3형식)야. 그리고 한국 시험이 가장 사랑하는 함정: discuss 뒤에 about 쓰면 시험 0점 맞는다!”",
+        examTraps: "★ 전치사를 절대 쓰면 안 되는 순수 타동사 낚시: discuss about (X), marry with (X), resemble with (X), reach to (X)!",
+        examples: [
+          {
+            sentence: "We discussed the serious environmental problem yesterday.",
+            translation: "우리는 어제 심각한 환경 문제를 토론했어요.",
+            analysis: "We(S) + discussed(V:타동사) + the serious environmental problem(O:목적어) + yesterday(M)",
+            whyReason: "★ 시험 1등 문제! discuss는 타동사이므로 about을 쓰지 않고 바로 목적어 명사를 취합니다."
+          },
+          {
+            sentence: "Leo enjoys playing baseball with his friends.",
+            translation: "레오는 친구들과 야구하는 것을 즐겨요.",
+            analysis: "Leo(S) + enjoys(V:타동사) + playing baseball(O:동명사 목적어) + with his friends(M)",
+            whyReason: "enjoy는 동작의 대상(~하는 것을)으로 동명사를 목적어로 취하는 대표 3형식 타동사입니다."
+          },
+          {
+            sentence: "She refused to accept his unfair suggestion.",
+            translation: "그녀는 그의 부당한 제안을 받아들이기를 거절했어요.",
+            analysis: "She(S) + refused(V:타동사) + to accept his unfair suggestion(O:to부정사 목적어)",
+            whyReason: "refuse는 거절하는 대상 내용으로 to부정사를 목적어로 취합니다."
+          },
+          {
+            sentence: "Tom married Jane in Paris last spring.",
+            translation: "탐은 지난봄 파리에서 제인과 결혼했어요.",
+            analysis: "Tom(S) + married(V:타동사) + Jane(O:목적어) + in Paris(M) + last spring(M)",
+            whyReason: "marry with Jane이라고 쓰면 한국 시험에서 무조건 감점! marry는 타동사라 목적어 Jane이 바로 옵니다."
+          },
+          {
+            sentence: "Scientists invented a revolutionary medical device.",
+            translation: "과학자들은 혁명적인 의료 장치를 발명했어요.",
+            analysis: "Scientists(S) + invented(V:타동사) + a revolutionary medical device(O:목적어)",
+            whyReason: "invented 뒤에 발명된 대상물(~을)이 바로 이어지는 전형적인 3형식입니다."
+          }
+        ],
+        quiz: {
+          question: "한국 수능 및 내신 시험 최다 빈출 어법 함정! 올바른 문장은?",
+          sentenceText: "Which sentence is grammatically CORRECT?",
+          options: [
+            "We discussed about the plan for an hour.",
+            "We discussed the plan for an hour.",
+            "He married with my sister last year.",
+            "She reached to the final goal easily."
+          ],
+          correctIndex: 1,
+          explanation: "discuss, marry, reach는 대표적인 '완전타동사'예요! 한국말로 '~에 대해 토론하다', '~와 결혼하다' 같아 보여서 about이나 with를 넣고 싶어지지만, 전치사를 절대 쓰지 않고 바로 목적어를 써야 정답입니다!"
+        }
+      },
+      {
+        patternNum: 4,
+        title: "4형식 : [ 주어(S) + 수여동사(V) + 간접목적어(IO) + 직접목적어(DO) ]",
+        formula: "S + V + IO(~에게) + DO(~을/를)",
+        coreConcept: "선물을 건네주는 기분 좋은 '주고받기' 문형!",
+        whyThisVerb: "누군가에게 무언가를 건네주거나 베풀어주는 <strong>수여(授與: 줄 수, 줄 여)동사</strong>들만 들어갑니다. 받는 사람(~에게)과 주는 물건(~을/를) 두 개의 목적어를 데리고 다닙니다.",
+        keyVerbs: [
+          { en: "방향 전달 동사 (3형식 전환 시 to)", list: "give, send, pass, show, teach, tell, write, lend" },
+          { en: "정성·노력 동사 MBC 파이 (3형식 전환 시 for)", list: "Make, Buy, Cook, Build, Find, Get" },
+          { en: "질문/부탁 동사 (3형식 전환 시 of)", list: "ask" }
+        ],
+        teacherScript: "“OO야, 상장 수여식 알지? 상장을 '주는' 거잖아. 4형식은 무조건 '누군가에게(IO) 무엇을(DO) 주는' 문형이야. 한국 중학교 시험 1등 문제는 무조건 4형식을 3형식으로 바꾸는 문제야! 사람과 물건 자리를 바꾸면서 가운데에 전치사(to, for, of)를 끼워 넣는 마법 공식만 알면 100점 맞아!”",
+        examTraps: "★ 4형식 ➡️ 3형식 전환 공식: [S + V + DO(물건) + 전치사(to/for/of) + IO(사람)]. 정성이 들어간 MBC 파이(Make, Buy, Cook)는 전치사 for를 씀!",
+        examples: [
+          {
+            sentence: "My uncle gave me an expensive drone for my birthday.",
+            translation: "삼촌이 내 생일 선물로 나에게 비싼 드론을 주셨어요.",
+            analysis: "My uncle(S) + gave(V:수여) + me(IO:나에게) + an expensive drone(DO:드론을) + for my birthday(M)",
+            whyReason: "give는 대표 수여동사로 [me(~에게) + drone(~을)] 목적어 2개를 취하며, 3형식 전환 시 to me가 됩니다."
+          },
+          {
+            sentence: "Mom cooked us a delicious Italian dinner.",
+            translation: "엄마가 우리에게 맛있는 이탈리아식 저녁을 요리해주셨어요.",
+            analysis: "Mom(S) + cooked(V:수여) + us(IO:우리에게) + a delicious Italian dinner(DO:저녁을)",
+            whyReason: "cook은 정성이 들어간 동사이므로 3형식으로 바꿀 때 for us를 씁니다."
+          },
+          {
+            sentence: "The kind teacher showed the students the new science project.",
+            translation: "친절한 선생님은 학생들에게 새 과학 프로젝트를 보여주셨어요.",
+            analysis: "The kind teacher(S) + showed(V:수여) + the students(IO) + the new science project(DO)",
+            whyReason: "show는 눈앞에 방향을 보여주는 동사이므로 3형식 전환 시 to the students가 됩니다."
+          },
+          {
+            sentence: "Dad bought his daughter a lovely doll.",
+            translation: "아빠는 그의 딸에게 사랑스러운 인형을 사주셨어요.",
+            analysis: "Dad(S) + bought(V:수여) + his daughter(IO) + a lovely doll(DO)",
+            whyReason: "buy는 구매하는 정성이 들어가므로 3형식 전환 시 전치사 for his daughter를 취합니다."
+          },
+          {
+            sentence: "May I ask you a polite favor?",
+            translation: "제가 당신에게 정중한 부탁 하나를 해도 될까요?",
+            analysis: "I(S) + ask(V:수여) + you(IO:당신에게) + a polite favor(DO:부탁을)",
+            whyReason: "ask는 질문이나 부탁 동사로 3형식 전환 시 특이하게 전치사 of you를 씁니다."
+          }
+        ],
+        quiz: {
+          question: "중학교 시험 100% 출제! 4형식을 3형식으로 바꿀 때 빈칸에 들어갈 전치사는? 'Dad bought me a watch ➡️ Dad bought a watch [ &nbsp; ] me.'",
+          sentenceText: "Dad bought a watch [ &nbsp;?&nbsp; ] me.",
+          options: ["to (방향)", "for (정성/MBC 파이)", "of (질문)", "with (함께)"],
+          correctIndex: 1,
+          explanation: "동사 buy(사주다)는 돈과 시간과 정성을 들여서 해주는 'MBC 파이(Make, Buy, Cook)' 동사예요! 따라서 3형식으로 바꿀 때 to가 아니라 [for]를 써야 완벽한 정답입니다!"
+        }
+      },
+      {
+        patternNum: 5,
+        title: "5형식 : [ 주어(S) + 불완전타동사(V) + 목적어(O) + 목적격보어(OC) ]",
+        formula: "S + V + O + OC (목적어 = 목적격보어)",
+        coreConcept: "영어 문법의 최고봉! 목적어에게 신분, 상태, 또는 행동을 시키는 문형!",
+        whyThisVerb: "목적어만으로는 뜻이 통하지 않아, 목적어가 '누구인지, 어떤 상태인지, 무슨 행동을 하는지' 보충해주는 <strong>목적격보어</strong>를 데려오는 <strong>불완전타동사</strong>들이 들어갑니다. [목적어(O) = 목적격보어(OC)] 등식 성립!",
+        keyVerbs: [
+          { en: "사역동사 (강제로 시키다 3대장)", list: "make, have, let ➡️ 목적격보어로 [동사원형]!" },
+          { en: "지각동사 (보고 듣고 느끼다)", list: "see, watch, hear, listen to, feel ➡️ 보어로 [동사원형 또는 -ing]!" },
+          { en: "미래 행동 요구 동사 (시험 최다 출제!)", list: "want, tell, ask, advise, order, allow, expect ➡️ 보어로 [to부정사]!" }
+        ],
+        teacherScript: "“OO야, 5형식이 한국 시험에서 가장 문제로 많이 나오는 '끝판왕 보스'야! 하지만 원리는 엄청 쉬워. 1) 목적어랑 보어가 [목적어 = 보어] 짝꿍이야. 2) 대장 사역동사(make, have, let)는 힘이 세서 to를 뺏어버리고 [동사원형]만 와! 3) 반면에 want, tell, ask 같은 일반 동사들은 미래에 할 일을 시키니까 꼭 [to부정사]를 모자로 씌워줘야 해!”",
+        examTraps: "★ 사역동사 뒤에 to부정사 써놓고 틀린 것 찾기 vs tell/want/allow 뒤에 동사원형 써놓고 틀린 것 찾기 대결!",
+        examples: [
+          {
+            sentence: "My mom made me clean my messy room.",
+            translation: "엄마는 내가 지저분한 방을 청소하도록 시키셨어요.",
+            analysis: "My mom(S) + made(V:사역동사) + me(O) + clean my messy room(OC:원형부정사)",
+            whyReason: "made는 강제로 시키는 사역동사이므로 목적격보어로 to clean이 아닌 동사원형 clean이 옵니다."
+          },
+          {
+            sentence: "I saw Leo playing the guitar passionately on stage.",
+            translation: "나는 레오가 무대에서 열정적으로 기타 연주하는 것을 보았어요.",
+            analysis: "I(S) + saw(V:지각동사) + Leo(O) + playing the guitar passionately(OC:현재분사) + on stage(M)",
+            whyReason: "see는 감각을 느끼는 지각동사이므로 생생한 진행을 나타내는 -ing(playing)가 보어로 옵니다."
+          },
+          {
+            sentence: "The doctor advised him to exercise regularly every day.",
+            translation: "의사는 그에게 매일 규칙적으로 운동하라고 조언했어요.",
+            analysis: "The doctor(S) + advised(V:요구 동사) + him(O) + to exercise regularly(OC:to부정사) + every day(M)",
+            whyReason: "advise는 미래 행동을 유도하는 동사이므로 목적격보어 자리에 반드시 to부정사가 와야 합니다."
+          },
+          {
+            sentence: "We call this cute little puppy Choco.",
+            translation: "우리는 이 귀여운 작은 강아지를 초코라고 불러요.",
+            analysis: "We(S) + call(V:호칭 동사) + this cute little puppy(O) + Choco(OC:명사 보어)",
+            whyReason: "call A B 구문으로 목적어 puppy = Choco라는 명사 보어의 동격 관계를 형성합니다."
+          },
+          {
+            sentence: "His warm words made everyone happy and comfortable.",
+            translation: "그의 따뜻한 말은 모두를 행복하고 편안하게 만들었어요.",
+            analysis: "His warm words(S) + made(V:5형식 상태 유발) + everyone(O) + happy and comfortable(OC:형용사 보어)",
+            whyReason: "목적어 everyone의 심리 상태를 설명하므로 happily(부사)가 아닌 형용사 happy가 와야 합니다."
+          }
+        ],
+        quiz: {
+          question: "고등학교/중학교 어법 문제 1등 단골! 빈칸에 들어갈 알맞은 형태는?",
+          sentenceText: "The strict teacher allowed the students [ &nbsp;?&nbsp; ] their smartphones during the break.",
+          options: ["use (동사원형)", "to use (to부정사)", "using (동명사)", "used (과거분사)"],
+          correctIndex: 1,
+          explanation: "'allow(허락하다)'는 사역동사(make, have, let)가 아니에요! 미래에 무언가를 하도록 허락하거나 요구하는 일반 5형식 동사이므로 목적격보어 자리에 반드시 [to use]를 써야 정답입니다!"
+        }
+      }
+    ];
+
+    // State Variables
+    let currentSection = 'components'; // 'components' or 'patterns'
+    let currentComponentIndex = 0;
+    let currentPatternIndex = 0;
+    let isTeacherModeOn = true;
+    let isPenMode = false;
+    let penColor = '#2563eb';
+    let penLineWidth = 4;
+    let isDrawing = false;
+    let lastX = 0;
+    let lastY = 0;
+
+    // DOM Elements
+    const sidebarCategoryTitle = document.getElementById('sidebarCategoryTitle');
+    const sidebarModeBadge = document.getElementById('sidebarModeBadge');
+    const sidebarNavList = document.getElementById('sidebarNavList');
+    const contentHeader = document.getElementById('contentHeader');
+    const lessonContentContainer = document.getElementById('lessonContentContainer');
+    const viewModeComponents = document.getElementById('viewModeComponents');
+    const viewModePatterns = document.getElementById('viewModePatterns');
+    const toggleTeacherModeBtn = document.getElementById('toggleTeacherModeBtn');
+    const cueStatus = document.getElementById('cueStatus');
+    const fullscreenBtn = document.getElementById('fullscreenBtn');
+
+    // Modal Elements
+    const componentDetailModal = document.getElementById('componentDetailModal');
+    const modalCard = document.getElementById('modalCard');
+    const modalChunkText = document.getElementById('modalChunkText');
+    const modalRoleBadge = document.getElementById('modalRoleBadge');
+    const modalPosDetail = document.getElementById('modalPosDetail');
+    const modalReason = document.getElementById('modalReason');
+    const modalTeacherQuestion = document.getElementById('modalTeacherQuestion');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const modalConfirmBtn = document.getElementById('modalConfirmBtn');
+
+    // Canvas Elements
+    const canvas = document.getElementById('drawingCanvas');
+    const ctx = canvas.getContext('2d');
+    const penToolbar = document.getElementById('penToolbar');
+    const togglePenBtn = document.getElementById('togglePenBtn');
+    const closePenBtn = document.getElementById('closePenBtn');
+    const clearCanvasBtn = document.getElementById('clearCanvasBtn');
+    const penSizeThin = document.getElementById('penSizeThin');
+    const penSizeThick = document.getElementById('penSizeThick');
+
+    // Switch Main Section
+    function switchViewSection(section) {
+      currentSection = section;
+      if (section === 'components') {
+        viewModeComponents.className = 'px-3 py-1 text-xs font-bold rounded-lg transition bg-white text-indigo-700 shadow-xs';
+        viewModePatterns.className = 'px-3 py-1 text-xs font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition';
+        sidebarCategoryTitle.textContent = '문장 성분 리스트';
+        sidebarModeBadge.textContent = '성분 모드';
+        sidebarModeBadge.className = 'text-2xs bg-indigo-50 text-indigo-600 font-bold px-1.5 py-0.5 rounded';
+      } else {
+        viewModePatterns.className = 'px-3 py-1 text-xs font-bold rounded-lg transition bg-white text-indigo-700 shadow-xs';
+        viewModeComponents.className = 'px-3 py-1 text-xs font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition';
+        sidebarCategoryTitle.textContent = '문장의 5형식 리스트';
+        sidebarModeBadge.textContent = '5형식 모드';
+        sidebarModeBadge.className = 'text-2xs bg-purple-50 text-purple-600 font-bold px-1.5 py-0.5 rounded';
+      }
+      renderSidebar();
+      renderContent();
+    }
+
+    // Render Sidebar Navigation
+    function renderSidebar() {
+      sidebarNavList.innerHTML = '';
+      if (currentSection === 'components') {
+        componentsData.forEach((item, idx) => {
+          const isActive = idx === currentComponentIndex;
+          const btn = document.createElement('button');
+          btn.className = `w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left transition font-medium text-xs ${
+            isActive ? 'bg-indigo-50 text-indigo-800 border border-indigo-200 font-bold shadow-2xs' : 'text-slate-600 hover:bg-slate-100'
+          }`;
+          btn.innerHTML = `
+            <div class="flex items-center space-x-2.5">
+              <span class="w-6 h-6 rounded-lg flex items-center justify-center text-xs font-black font-mono ${
+                isActive ? 'bg-indigo-600 text-white' : 'bg-slate-200 text-slate-700'
+              }">
+                ${item.symbol}
+              </span>
+              <span>${item.nameKr}</span>
+            </div>
+            <i class="fa-solid fa-chevron-right text-3xs ${isActive ? 'text-indigo-600' : 'text-slate-300'}"></i>
+          `;
+          btn.onclick = () => {
+            currentComponentIndex = idx;
+            renderSidebar();
+            renderContent();
+          };
+          sidebarNavList.appendChild(btn);
+        });
+      } else {
+        patternsData.forEach((item, idx) => {
+          const isActive = idx === currentPatternIndex;
+          const btn = document.createElement('button');
+          btn.className = `w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left transition font-medium text-xs ${
+            isActive ? 'bg-purple-50 text-purple-800 border border-purple-200 font-bold shadow-2xs' : 'text-slate-600 hover:bg-slate-100'
+          }`;
+          btn.innerHTML = `
+            <div class="flex items-center space-x-2.5">
+              <span class="w-6 h-6 rounded-lg flex items-center justify-center text-xs font-black font-mono ${
+                isActive ? 'bg-purple-600 text-white' : 'bg-slate-200 text-slate-700'
+              }">
+                ${item.patternNum}
+              </span>
+              <span>${item.patternNum}형식 <span class="text-slate-400 font-normal">(${item.formula.split(' ')[0]}...)</span></span>
+            </div>
+            <i class="fa-solid fa-chevron-right text-3xs ${isActive ? 'text-purple-600' : 'text-slate-300'}"></i>
+          `;
+          btn.onclick = () => {
+            currentPatternIndex = idx;
+            renderSidebar();
+            renderContent();
+          };
+          sidebarNavList.appendChild(btn);
+        });
+      }
+    }
+
+    // Render Content Header
+    function renderHeader() {
+      if (currentSection === 'components') {
+        const cur = componentsData[currentComponentIndex];
+        contentHeader.innerHTML = `
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-3.5">
+              <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-600 flex items-center justify-center text-white text-2xl font-black font-mono shadow-md">
+                ${cur.symbol}
+              </div>
+              <div>
+                <div class="flex items-center space-x-2">
+                  <h2 class="text-xl font-extrabold text-slate-900">${cur.nameKr}</h2>
+                  <span class="text-xs font-bold px-2.5 py-0.5 rounded-full ${cur.colorClass}">문장 4대 뼈대</span>
+                </div>
+                <p class="text-xs text-slate-500 mt-0.5 font-medium">${cur.oneLiner}</p>
+              </div>
+            </div>
+            <div class="hidden sm:flex items-center space-x-2">
+              <button onclick="prevItem()" class="px-3 py-1.5 text-xs border border-slate-200 rounded-lg hover:bg-slate-100 text-slate-600 font-bold transition">
+                <i class="fa-solid fa-arrow-left mr-1"></i>이전
+              </button>
+              <button onclick="nextItem()" class="px-3 py-1.5 text-xs bg-slate-900 hover:bg-slate-800 rounded-lg text-white font-bold transition">
+                다음<i class="fa-solid fa-arrow-right ml-1"></i>
+              </button>
+            </div>
+          </div>
+        `;
+      } else {
+        const cur = patternsData[currentPatternIndex];
+        contentHeader.innerHTML = `
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-3.5">
+              <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-purple-600 to-pink-600 flex items-center justify-center text-white text-2xl font-black font-mono shadow-md">
+                ${cur.patternNum}V
+              </div>
+              <div>
+                <div class="flex items-center space-x-2">
+                  <h2 class="text-xl font-extrabold text-slate-900">${cur.title}</h2>
+                  <span class="text-xs font-mono font-bold px-2.5 py-0.5 rounded-full bg-purple-100 text-purple-800">${cur.formula}</span>
+                </div>
+                <p class="text-xs text-slate-500 mt-0.5 font-medium">${cur.coreConcept}</p>
+              </div>
+            </div>
+            <div class="hidden sm:flex items-center space-x-2">
+              <button onclick="prevItem()" class="px-3 py-1.5 text-xs border border-slate-200 rounded-lg hover:bg-slate-100 text-slate-600 font-bold transition">
+                <i class="fa-solid fa-arrow-left mr-1"></i>이전
+              </button>
+              <button onclick="nextItem()" class="px-3 py-1.5 text-xs bg-slate-900 hover:bg-slate-800 rounded-lg text-white font-bold transition">
+                다음<i class="fa-solid fa-arrow-right ml-1"></i>
+              </button>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    function prevItem() {
+      if (currentSection === 'components') {
+        currentComponentIndex = (currentComponentIndex - 1 + componentsData.length) % componentsData.length;
+      } else {
+        currentPatternIndex = (currentPatternIndex - 1 + patternsData.length) % patternsData.length;
+      }
+      renderSidebar();
+      renderContent();
+    }
+
+    function nextItem() {
+      if (currentSection === 'components') {
+        currentComponentIndex = (currentComponentIndex + 1) % componentsData.length;
+      } else {
+        currentPatternIndex = (currentPatternIndex + 1) % patternsData.length;
+      }
+      renderSidebar();
+      renderContent();
+    }
+
+    // Render Component Details View
+    function renderComponentView() {
+      const cur = componentsData[currentComponentIndex];
+
+      let allowedListHtml = '';
+      cur.allowedParts.forEach(item => {
+        allowedListHtml += `
+          <div class="p-2.5 bg-emerald-50/60 rounded-xl border border-emerald-100 text-xs">
+            <div class="flex items-center justify-between mb-0.5">
+              <span class="font-bold text-emerald-900 flex items-center">
+                <i class="fa-solid fa-circle-check text-emerald-500 mr-1.5 text-2xs"></i>${item.pos}
+              </span>
+              <span class="text-2xs text-emerald-600 font-medium">${item.note}</span>
+            </div>
+            <div class="text-2xs font-mono text-slate-700 bg-white/70 px-2 py-0.5 rounded border border-emerald-100/50 mt-1">
+              ${item.example}
+            </div>
+          </div>
+        `;
+      });
+
+      let forbiddenListHtml = '';
+      cur.forbiddenParts.forEach(item => {
+        forbiddenListHtml += `
+          <div class="p-2.5 bg-rose-50/60 rounded-xl border border-rose-100 text-xs">
+            <div class="font-bold text-rose-900 flex items-center mb-0.5">
+              <i class="fa-solid fa-circle-xmark text-rose-500 mr-1.5 text-2xs"></i>${item.pos}
+            </div>
+            <div class="text-2xs text-rose-700 font-medium leading-relaxed">${item.reason}</div>
+          </div>
+        `;
+      });
+
+      let examplesHtml = '';
+      cur.examples.forEach((ex, idx) => {
+        let chunksHtml = '';
+        ex.chunks.forEach(chunk => {
+          let roleColor = 'bg-slate-100 text-slate-700 border-slate-200';
+          if (chunk.role.includes('주어') || chunk.role.includes('(S)')) roleColor = 'bg-blue-100 text-blue-900 border-blue-300 font-bold';
+          else if (chunk.role.includes('동사') || chunk.role.includes('(V)')) roleColor = 'bg-amber-100 text-amber-900 border-amber-300 font-bold';
+          else if (chunk.role.includes('목적어') || chunk.role.includes('(O)')) roleColor = 'bg-emerald-100 text-emerald-900 border-emerald-300 font-bold';
+          else if (chunk.role.includes('보어') || chunk.role.includes('(C)')) roleColor = 'bg-purple-100 text-purple-900 border-purple-300 font-bold';
+          else if (chunk.role.includes('수식어') || chunk.role.includes('(M)')) roleColor = 'bg-slate-100 text-slate-600 border-slate-300';
+
+          chunksHtml += `
+            <span class="chunk-chip cursor-pointer inline-flex items-center px-2.5 py-1 rounded-lg border text-xs m-0.5 transition hover:scale-105 active:scale-95 shadow-2xs ${roleColor}"
+                  data-chunk="${chunk.text}"
+                  data-role="${chunk.role}"
+                  data-pos="${chunk.pos}"
+                  data-reason="${chunk.reason}"
+                  data-prompt="${chunk.prompt}">
+              <span>${chunk.text}</span>
+              <span class="ml-1.5 text-3xs px-1 rounded bg-black/10 font-mono">${chunk.role.split(' ')[0]}</span>
+            </span>
+          `;
+        });
+
+        examplesHtml += `
+          <div class="p-3.5 bg-slate-50/80 rounded-xl border border-slate-200 hover:border-indigo-300 transition">
+            <div class="flex items-center justify-between mb-1.5">
+              <span class="text-2xs font-extrabold text-slate-400 font-mono">EXAMPLE #0${idx + 1}</span>
+              <span class="text-2xs text-slate-400">💡 칩을 터치해서 품사와 역할 확인</span>
+            </div>
+            <div class="text-sm text-slate-900 font-medium leading-relaxed mb-1 flex flex-wrap items-center">
+              ${chunksHtml}
+            </div>
+            <div class="text-xs text-slate-500 font-medium">
+              ${ex.translation}
+            </div>
+          </div>
+        `;
+      });
+
+      lessonContentContainer.innerHTML = `
+        <!-- Teacher Coaching Box -->
+        <div id="teacherCueBox" class="${isTeacherModeOn ? '' : 'hidden'} bg-amber-50/90 border border-amber-200 rounded-2xl p-4 shadow-xs">
+          <div class="flex items-start space-x-3">
+            <div class="w-8 h-8 rounded-lg bg-amber-500 text-white flex items-center justify-center shrink-0 mt-0.5 shadow">
+              <i class="fa-solid fa-comment-dots text-base"></i>
+            </div>
+            <div class="flex-1">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold uppercase tracking-wider text-amber-900 bg-amber-200 px-2 py-0.5 rounded">
+                  Teacher's Script (이렇게 대화해주세요!)
+                </span>
+                <span class="text-xs text-amber-700 font-medium">한국 문법 질문식 코칭</span>
+              </div>
+              <p class="mt-2 text-sm text-amber-950 font-medium leading-relaxed">
+                ${cur.teacherScript}
+              </p>
+              <div class="mt-2 text-xs text-amber-900 bg-amber-100/70 p-2.5 rounded-lg border border-amber-200/60 font-medium">
+                <strong>🚨 한국 시험 함정 공식:</strong> ${cur.examTraps}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3-Step Component Roadmap -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <!-- Step 1: Definition -->
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-2xs flex flex-col justify-between">
+            <div>
+              <div class="flex items-center space-x-1.5 mb-2">
+                <span class="w-5 h-5 rounded-full bg-indigo-600 text-white text-2xs font-black flex items-center justify-center font-mono">1</span>
+                <span class="text-xs font-bold text-indigo-700 uppercase">성분의 정의 (Definition)</span>
+              </div>
+              <h3 class="text-slate-900 font-black text-sm mb-1.5">${cur.nameKr}</h3>
+              <p class="text-xs text-slate-600 leading-relaxed">${cur.definition}</p>
+            </div>
+            <div class="mt-3 pt-3 border-t border-slate-100 text-2xs font-mono text-indigo-600 font-bold bg-indigo-50/50 -mx-2 -mb-2 p-2 rounded-b-xl">
+              📌 위치 공식: ${cur.positionRule}
+            </div>
+          </div>
+
+          <!-- Step 2: Allowed Parts of Speech -->
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-2xs">
+            <div class="flex items-center space-x-1.5 mb-2">
+              <span class="w-5 h-5 rounded-full bg-emerald-600 text-white text-2xs font-black flex items-center justify-center font-mono">2</span>
+              <span class="text-xs font-bold text-emerald-700 uppercase">들어갈 수 있는 품사 (Allowed)</span>
+            </div>
+            <div class="space-y-1.5">
+              ${allowedListHtml}
+            </div>
+          </div>
+
+          <!-- Step 3: Forbidden Parts (Traps) -->
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-2xs">
+            <div class="flex items-center space-x-1.5 mb-2">
+              <span class="w-5 h-5 rounded-full bg-rose-600 text-white text-2xs font-black flex items-center justify-center font-mono">3</span>
+              <span class="text-xs font-bold text-rose-700 uppercase">절대 못 들어가는 품사 (Traps)</span>
+            </div>
+            <div class="space-y-1.5">
+              ${forbiddenListHtml}
+            </div>
+          </div>
+        </div>
+
+        <!-- 5 Interactive Examples Section -->
+        <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-2xs">
+          <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
+            <div>
+              <h3 class="text-base font-extrabold text-slate-900 flex items-center space-x-2">
+                <i class="fa-solid fa-layer-group text-indigo-600"></i>
+                <span>실전 문장 성분 블록 분해 (5개 예문)</span>
+              </h3>
+              <p class="text-xs text-slate-500 mt-0.5">각 블록(단어 묶음)을 터치하여 품사와 문장 속 역할을 직접 아이와 탐구해보세요.</p>
+            </div>
+            <span class="text-2xs bg-indigo-50 text-indigo-700 font-bold px-2.5 py-1 rounded-full border border-indigo-100">
+              S·V·O·C 블록 터치
+            </span>
+          </div>
+          <div class="space-y-3">
+            ${examplesHtml}
+          </div>
+        </div>
+
+        <!-- Quiz Section -->
+        <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white rounded-2xl p-6 shadow-md">
+          <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center space-x-2.5">
+              <div class="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center text-yellow-400">
+                <i class="fa-solid fa-brain text-base"></i>
+              </div>
+              <div>
+                <h4 class="font-extrabold text-sm text-white">아이와 함께 푸는 문장 성분 탭 챌린지!</h4>
+                <p class="text-xs text-slate-300">선생님이 질문하고 아이가 패드에서 직접 정답을 누르게 해주세요.</p>
+              </div>
+            </div>
+            <span class="text-2xs font-mono bg-indigo-500/30 text-indigo-200 border border-indigo-400/30 px-2.5 py-0.5 rounded-full">Challenge</span>
+          </div>
+          <div id="quizContainerArea" class="bg-white/10 backdrop-blur-md rounded-xl p-4 border border-white/10"></div>
+        </div>
+      `;
+
+      attachChipEvents();
+      renderQuiz(cur.quiz);
+    }
+
+    // Render 5-Pattern View
+    function renderPatternView() {
+      const cur = patternsData[currentPatternIndex];
+
+      let keyVerbsHtml = '';
+      cur.keyVerbs.forEach(v => {
+        keyVerbsHtml += `
+          <div class="p-3 bg-white rounded-xl border border-slate-200">
+            <div class="font-bold text-slate-900 text-xs mb-1 flex items-center space-x-1.5">
+              <span class="w-1.5 h-1.5 rounded-full bg-purple-600"></span>
+              <span>${v.en}</span>
+            </div>
+            <div class="text-2xs font-mono text-purple-700 bg-purple-50 px-2 py-1 rounded border border-purple-100">
+              ${v.list}
+            </div>
+          </div>
+        `;
+      });
+
+      let examplesHtml = '';
+      cur.examples.forEach((ex, idx) => {
+        examplesHtml += `
+          <div class="p-4 bg-slate-50/80 rounded-xl border border-slate-200 hover:border-purple-300 transition">
+            <div class="flex items-center justify-between mb-1">
+              <span class="text-2xs font-extrabold text-purple-700 font-mono">PATTERN #0${idx + 1}</span>
+              <span class="text-2xs font-mono text-slate-500 bg-slate-200/70 px-2 py-0.5 rounded">${ex.analysis}</span>
+            </div>
+            <div class="text-sm font-bold text-slate-900 leading-relaxed mb-0.5">
+              ${ex.sentence}
+            </div>
+            <div class="text-xs text-slate-500 mb-2 font-medium">
+              ${ex.translation}
+            </div>
+            <div class="text-2xs text-indigo-900 bg-indigo-50/80 p-2.5 rounded-lg border border-indigo-100/70 leading-relaxed font-medium">
+              <strong>💡 왜 이 동사가 이 형식인가? :</strong> ${ex.whyReason}
+            </div>
+          </div>
+        `;
+      });
+
+      lessonContentContainer.innerHTML = `
+        <!-- Teacher Coaching Box -->
+        <div id="teacherCueBox" class="${isTeacherModeOn ? '' : 'hidden'} bg-amber-50/90 border border-amber-200 rounded-2xl p-4 shadow-xs">
+          <div class="flex items-start space-x-3">
+            <div class="w-8 h-8 rounded-lg bg-amber-500 text-white flex items-center justify-center shrink-0 mt-0.5 shadow">
+              <i class="fa-solid fa-comment-dots text-base"></i>
+            </div>
+            <div class="flex-1">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold uppercase tracking-wider text-amber-900 bg-amber-200 px-2 py-0.5 rounded">
+                  Teacher's Script (동사의 성격으로 설명하기!)
+                </span>
+                <span class="text-xs text-amber-700 font-medium">${cur.patternNum}형식 티칭 가이드</span>
+              </div>
+              <p class="mt-2 text-sm text-amber-950 font-medium leading-relaxed">
+                ${cur.teacherScript}
+              </p>
+              <div class="mt-2 text-xs text-amber-900 bg-amber-100/70 p-2.5 rounded-lg border border-amber-200/60 font-medium">
+                ${cur.examTraps}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pattern Architecture Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Left: Why this Verb? -->
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-2xs">
+            <div class="flex items-center space-x-2 mb-2">
+              <span class="w-6 h-6 rounded-lg bg-purple-600 text-white text-xs font-black flex items-center justify-center font-mono">?</span>
+              <h3 class="text-xs font-bold text-purple-700 uppercase">왜 이 동사들이 들어갈까? (동사의 성격)</h3>
+            </div>
+            <p class="text-xs text-slate-700 leading-relaxed font-medium mb-3">
+              ${cur.whyThisVerb}
+            </p>
+            <div class="text-2xs font-mono font-bold text-purple-800 bg-purple-50 p-2.5 rounded-xl border border-purple-100">
+              📌 공식: ${cur.formula}
+            </div>
+          </div>
+
+          <!-- Right: Key Representative Verbs -->
+          <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 shadow-2xs">
+            <div class="flex items-center space-x-2 mb-2">
+              <span class="w-6 h-6 rounded-lg bg-indigo-600 text-white text-xs font-black flex items-center justify-center font-mono">V</span>
+              <h3 class="text-xs font-bold text-indigo-700 uppercase">이 형식에 쓰이는 대표 동사 분류</h3>
+            </div>
+            <div class="space-y-2">
+              ${keyVerbsHtml}
+            </div>
+          </div>
+        </div>
+
+        <!-- 5 Master Examples with Deep Reason -->
+        <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-2xs">
+          <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
+            <div>
+              <h3 class="text-base font-extrabold text-slate-900 flex items-center space-x-2">
+                <i class="fa-solid fa-route text-purple-600"></i>
+                <span>${cur.patternNum}형식 실전 엄선 예문 5개 & 형식 판별 이유</span>
+              </h3>
+              <p class="text-xs text-slate-500 mt-0.5">각 문장이 왜 이 형식에 속하는지 동사의 성격과 필수 성분을 정확히 짚어주세요.</p>
+            </div>
+            <span class="text-2xs bg-purple-50 text-purple-700 font-bold px-2.5 py-1 rounded-full border border-purple-100">
+              5 Patterns Lab
+            </span>
+          </div>
+          <div class="space-y-3">
+            ${examplesHtml}
+          </div>
+        </div>
+
+        <!-- Quiz Section -->
+        <div class="bg-gradient-to-r from-slate-900 via-purple-950 to-slate-900 text-white rounded-2xl p-6 shadow-md">
+          <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center space-x-2.5">
+              <div class="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center text-yellow-400">
+                <i class="fa-solid fa-puzzle-piece text-base"></i>
+              </div>
+              <div>
+                <h4 class="font-extrabold text-sm text-white">${cur.patternNum}형식 실전 시험 함정 퀴즈!</h4>
+                <p class="text-xs text-slate-300">내신과 수능에서 가장 많이 오답률을 기록하는 포인트입니다.</p>
+              </div>
+            </div>
+            <span class="text-2xs font-mono bg-purple-500/30 text-purple-200 border border-purple-400/30 px-2.5 py-0.5 rounded-full">Trap Test</span>
+          </div>
+          <div id="quizContainerArea" class="bg-white/10 backdrop-blur-md rounded-xl p-4 border border-white/10"></div>
+        </div>
+      `;
+
+      renderQuiz(cur.quiz);
+    }
+
+    // Attach Chip Click Events for Chunk Analysis Modal
+    function attachChipEvents() {
+      document.querySelectorAll('.chunk-chip').forEach(chip => {
+        chip.addEventListener('click', (e) => {
+          e.stopPropagation();
+          openModal(
+            chip.dataset.chunk,
+            chip.dataset.role,
+            chip.dataset.pos,
+            chip.dataset.reason,
+            chip.dataset.prompt
+          );
+        });
+      });
+    }
+
+    // Open Modal
+    function openModal(chunk, role, pos, reason, prompt) {
+      modalChunkText.textContent = chunk;
+      modalRoleBadge.textContent = role;
+      modalPosDetail.textContent = pos;
+      modalReason.textContent = reason;
+      modalTeacherQuestion.textContent = prompt;
+
+      componentDetailModal.classList.remove('hidden');
+      setTimeout(() => {
+        modalCard.classList.remove('scale-95', 'opacity-0');
+        modalCard.classList.add('scale-100', 'opacity-100');
+      }, 10);
+    }
+
+    // Close Modal
+    function closeModal() {
+      modalCard.classList.add('scale-95', 'opacity-0');
+      modalCard.classList.remove('scale-100', 'opacity-100');
+      setTimeout(() => {
+        componentDetailModal.classList.add('hidden');
+      }, 150);
+    }
+
+    closeModalBtn.onclick = closeModal;
+    modalConfirmBtn.onclick = closeModal;
+    componentDetailModal.onclick = (e) => {
+      if (e.target === componentDetailModal) closeModal();
+    };
+
+    // Render Quiz Logic
+    function renderQuiz(quiz) {
+      const container = document.getElementById('quizContainerArea');
+      if (!container || !quiz) return;
+
+      container.innerHTML = `
+        <p class="text-sm font-bold text-white mb-2 leading-relaxed">
+          ${quiz.question}
+        </p>
+        <div class="p-2.5 bg-black/20 rounded-lg text-xs font-mono text-purple-200 mb-3 border border-white/5">
+          ${quiz.sentenceText}
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2" id="quizButtonsArea"></div>
+        <div id="quizAnswerFeedback" class="hidden mt-3 p-3 rounded-xl text-xs leading-relaxed font-medium"></div>
+      `;
+
+      const buttonsArea = document.getElementById('quizButtonsArea');
+      const feedback = document.getElementById('quizAnswerFeedback');
+
+      quiz.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'p-2.5 bg-white/10 hover:bg-white/20 active:bg-white/30 border border-white/10 rounded-xl text-left text-xs font-semibold text-white transition';
+        btn.textContent = `${idx + 1}. ${opt}`;
+        btn.onclick = () => {
+          feedback.classList.remove('hidden');
+          if (idx === quiz.correctIndex) {
+            feedback.className = 'mt-3 p-3 rounded-xl bg-emerald-500/20 border border-emerald-400/40 text-emerald-100 text-xs font-medium';
+            feedback.innerHTML = `<strong>🎉 정답입니다! 완벽해요!</strong><br>${quiz.explanation}`;
+          } else {
+            feedback.className = 'mt-3 p-3 rounded-xl bg-rose-500/20 border border-rose-400/40 text-rose-100 text-xs font-medium';
+            feedback.innerHTML = `<strong>다시 한번 생각해볼까요? 💡</strong><br>${quiz.explanation}`;
+          }
+        };
+        buttonsArea.appendChild(btn);
+      });
+    }
+
+    // Toggle Teacher Script Mode
+    toggleTeacherModeBtn.onclick = () => {
+      isTeacherModeOn = !isTeacherModeOn;
+      const box = document.getElementById('teacherCueBox');
+      if (isTeacherModeOn) {
+        if (box) box.classList.remove('hidden');
+        cueStatus.textContent = 'ON';
+        cueStatus.className = 'font-bold text-xs bg-amber-200 text-amber-900 px-1.5 py-0.2 rounded-full ml-1';
+      } else {
+        if (box) box.classList.add('hidden');
+        cueStatus.textContent = 'OFF';
+        cueStatus.className = 'font-bold text-xs bg-slate-200 text-slate-600 px-1.5 py-0.2 rounded-full ml-1';
+      }
+    };
+
+    // Fullscreen Toggle
+    fullscreenBtn.onclick = () => {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else {
+        if (document.exitFullscreen) document.exitFullscreen();
+      }
+    };
+
+    // Responsive Canvas Resizing for Tablet Pen
+    function resizeCanvas() {
+      const container = document.getElementById('mainScrollArea');
+      canvas.width = container.scrollWidth;
+      canvas.height = container.scrollHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+
+    // Pen Drawing Logic
+    function startDrawing(e) {
+      if (!isPenMode) return;
+      isDrawing = true;
+      const rect = canvas.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      lastX = clientX - rect.left;
+      lastY = clientY - rect.top;
+    }
+
+    function draw(e) {
+      if (!isDrawing || !isPenMode) return;
+      e.preventDefault();
+      const rect = canvas.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      const currentX = clientX - rect.left;
+      const currentY = clientY - rect.top;
+
+      ctx.beginPath();
+      ctx.moveTo(lastX, lastY);
+      ctx.lineTo(currentX, currentY);
+      ctx.strokeStyle = penColor;
+      ctx.lineWidth = penLineWidth;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.stroke();
+
+      lastX = currentX;
+      lastY = currentY;
+    }
+
+    function stopDrawing() {
+      isDrawing = false;
+    }
+
+    canvas.addEventListener('mousedown', startDrawing);
+    canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('mouseup', stopDrawing);
+    canvas.addEventListener('mouseleave', stopDrawing);
+    canvas.addEventListener('touchstart', startDrawing, { passive: false });
+    canvas.addEventListener('touchmove', draw, { passive: false });
+    canvas.addEventListener('touchend', stopDrawing);
+
+    togglePenBtn.onclick = () => {
+      isPenMode = !isPenMode;
+      if (isPenMode) {
+        resizeCanvas();
+        canvas.classList.remove('pointer-events-none');
+        canvas.classList.add('pen-active');
+        penToolbar.classList.remove('hidden');
+        togglePenBtn.className = 'flex items-center space-x-1.5 px-3 py-1.5 bg-indigo-600 text-white rounded-lg text-sm font-medium transition touch-action-manipulation shadow-xs';
+      } else {
+        canvas.classList.add('pointer-events-none');
+        canvas.classList.remove('pen-active');
+        penToolbar.classList.add('hidden');
+        togglePenBtn.className = 'flex items-center space-x-1.5 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-sm font-medium transition touch-action-manipulation';
+      }
+    };
+
+    closePenBtn.onclick = () => {
+      isPenMode = false;
+      canvas.classList.add('pointer-events-none');
+      canvas.classList.remove('pen-active');
+      penToolbar.classList.add('hidden');
+      togglePenBtn.className = 'flex items-center space-x-1.5 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-sm font-medium transition touch-action-manipulation';
+    };
+
+    clearCanvasBtn.onclick = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    };
+
+    document.querySelectorAll('.pen-color-btn').forEach(btn => {
+      btn.onclick = () => {
+        document.querySelectorAll('.pen-color-btn').forEach(b => b.classList.remove('ring-blue-600', 'ring-red-500', 'ring-amber-500', 'ring-emerald-600'));
+        penColor = btn.dataset.color;
+        btn.classList.add('ring-offset-2');
+        if (penColor === '#ef4444') btn.classList.add('ring-red-500');
+        else if (penColor === '#2563eb') btn.classList.add('ring-blue-600');
+        else if (penColor === '#f59e0b') btn.classList.add('ring-amber-500');
+        else if (penColor === '#059669') btn.classList.add('ring-emerald-600');
+      };
+    });
+
+    penSizeThin.onclick = () => {
+      penLineWidth = 2;
+      penSizeThin.className = 'px-2 py-1 text-xs rounded bg-blue-100 text-blue-700 font-bold';
+      penSizeThick.className = 'px-2 py-1 text-xs rounded bg-slate-100 hover:bg-slate-200 font-bold';
+    };
+
+    penSizeThick.onclick = () => {
+      penLineWidth = 6;
+      penSizeThick.className = 'px-2 py-1 text-xs rounded bg-blue-100 text-blue-700 font-bold';
+      penSizeThin.className = 'px-2 py-1 text-xs rounded bg-slate-100 hover:bg-slate-200 font-bold';
+    };
+
+    // Master Content Controller
+    function renderContent() {
+      renderHeader();
+      if (currentSection === 'components') {
+        renderComponentView();
+      } else {
+        renderPatternView();
+      }
+      resizeCanvas();
+    }
+
+    // Initialize on Page Load
+    window.onload = function() {
+      renderSidebar();
+      renderContent();
+      resizeCanvas();
+    };
+  </script>
+</body>
+</html>

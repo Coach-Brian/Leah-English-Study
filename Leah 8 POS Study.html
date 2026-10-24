@@ -1,0 +1,1685 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>8품사 완벽 정복 - iPad 1:1 맞춤형 수업 교안</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts (Pretendard & Inter) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Noto Sans KR', 'Poppins', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              800: '#1e40af',
+              900: '#1e3a8a',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Custom Scrollbar for sleek tablet experience */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+    .touch-action-manipulation {
+      touch-action: manipulation;
+    }
+    /* Drawing Canvas Cursor */
+    .pen-active {
+      cursor: crosshair;
+    }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-800 font-sans h-screen flex flex-col overflow-hidden select-none">
+
+  <!-- Top Navigation Header -->
+  <header class="bg-white border-b border-slate-200 px-4 py-2.5 flex items-center justify-between shrink-0 shadow-sm z-30">
+    <div class="flex items-center space-x-3">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-md">
+        <i class="fa-solid fa-shapes text-lg"></i>
+      </div>
+      <div>
+        <div class="flex items-center space-x-2">
+          <h1 class="font-bold text-lg text-slate-900 tracking-tight">8품사(Parts of Speech) 비밀 지도</h1>
+          <span class="px-2 py-0.5 text-xs font-semibold bg-blue-100 text-blue-700 rounded-full">1:1 패드 수업용</span>
+        </div>
+        <p class="text-xs text-slate-500">"문법 용어는 외우는 게 아니라 단어의 역할을 구경하는 거야!"</p>
+      </div>
+    </div>
+
+    <!-- Quick Tool Buttons -->
+    <div class="flex items-center space-x-2">
+      <!-- Mode Switcher: Lesson vs Blueprint -->
+      <div class="bg-slate-100 p-1 rounded-xl flex items-center space-x-1 border border-slate-200">
+        <button id="viewModeBasic" onclick="switchViewMode('basic')" class="px-3 py-1 text-xs font-bold rounded-lg transition bg-white text-blue-700 shadow-xs">
+          <i class="fa-solid fa-shapes mr-1"></i>기본 탐구
+        </button>
+        <button id="viewModeBlueprint" onclick="switchViewMode('blueprint')" class="px-3 py-1 text-xs font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition">
+          <i class="fa-solid fa-sitemap mr-1"></i>종류별 블루프린트 (Blueprint)
+        </button>
+      </div>
+
+      <!-- Whiteboard / Pen Mode Toggle -->
+      <button id="togglePenBtn" class="flex items-center space-x-1.5 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-slate-700 rounded-lg text-sm font-medium transition touch-action-manipulation">
+        <i class="fa-solid fa-pen-nib text-indigo-500"></i>
+        <span>패드 필기 모드</span>
+      </button>
+
+      <!-- Teacher Cue Guide Toggle -->
+      <button id="toggleTeacherModeBtn" class="flex items-center space-x-1.5 px-3 py-1.5 bg-amber-50 hover:bg-amber-100 active:bg-amber-200 text-amber-800 border border-amber-300 rounded-lg text-sm font-medium transition shadow-sm touch-action-manipulation">
+        <i class="fa-solid fa-chalkboard-user text-amber-600"></i>
+        <span>선생님 코칭 스크립트 <span id="cueStatus" class="font-bold text-xs bg-amber-200 text-amber-900 px-1.5 py-0.2 rounded-full ml-1">ON</span></span>
+      </button>
+
+      <!-- Fullscreen / Reset View -->
+      <button id="fullscreenBtn" class="p-2 text-slate-500 hover:text-slate-800 rounded-lg hover:bg-slate-100 transition">
+        <i class="fa-solid fa-expand"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Work Area (Two Columns on Tablet/Desktop) -->
+  <div class="flex-1 flex overflow-hidden relative">
+
+    <!-- Left Sidebar: 8 Parts of Speech Tabs -->
+    <aside class="w-64 bg-white border-r border-slate-200 flex flex-col shrink-0 overflow-y-auto">
+      <div class="p-3 border-b border-slate-100 bg-slate-50 flex items-center justify-between">
+        <p id="sidebarTitle" class="text-xs font-bold text-slate-400 uppercase tracking-wider">단어 레고 블록 8개</p>
+        <span id="sidebarBadge" class="text-2xs bg-blue-50 text-blue-600 font-bold px-1.5 py-0.5 rounded">기본</span>
+      </div>
+      <nav id="posNavList" class="p-2 space-y-1">
+        <!-- Rendered by JavaScript -->
+      </nav>
+
+      <!-- Bottom Student Motivation Card -->
+      <div class="mt-auto p-3 m-2 bg-gradient-to-br from-indigo-50 to-blue-50 rounded-xl border border-indigo-100">
+        <div class="flex items-center space-x-2 text-indigo-700 font-bold text-xs mb-1">
+          <i class="fa-solid fa-lightbulb"></i>
+          <span>선생님의 티칭 비밀 팁</span>
+        </div>
+        <p class="text-xs text-slate-600 leading-relaxed">
+          학생이 영어 문장을 이미 잘 읽는다면, 한국어 용어를 먼저 말하지 말고 <span class="text-indigo-600 font-semibold">"이 단어가 문장에서 무슨 일을 해?"</span>라고 물어보세요!
+        </p>
+      </div>
+    </aside>
+
+    <!-- Center/Right Content Area -->
+    <main class="flex-1 flex flex-col overflow-y-auto bg-slate-50 relative" id="mainScrollArea">
+      
+      <!-- Top Overview Banner -->
+      <div id="contentHeader" class="bg-white border-b border-slate-200 p-6 shadow-xs transition-all">
+        <!-- Injected by JS -->
+      </div>
+
+      <!-- Main Lesson Body (Basic Mode Container) -->
+      <div id="basicViewContainer" class="p-6 space-y-6 max-w-5xl mx-auto w-full">
+
+        <!-- Teacher's Korean-English Script Card (Collapsible via toggle button) -->
+        <div id="teacherCueBox" class="bg-amber-50/90 border border-amber-200 rounded-2xl p-4 shadow-sm transition duration-200">
+          <div class="flex items-start space-x-3">
+            <div class="w-8 h-8 rounded-lg bg-amber-500 text-white flex items-center justify-center shrink-0 mt-0.5 shadow">
+              <i class="fa-solid fa-comment-dots text-base"></i>
+            </div>
+            <div class="flex-1">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold uppercase tracking-wider text-amber-900 bg-amber-200 px-2 py-0.5 rounded">
+                  Teacher's Korean Script (이렇게 말해주세요!)
+                </span>
+                <span class="text-xs text-amber-700 font-medium">영어로 질문 후 한국어 연결하기</span>
+              </div>
+              <p id="teacherScriptText" class="mt-2 text-sm text-amber-950 font-medium leading-relaxed">
+                <!-- Injected by JS -->
+              </p>
+              <div id="teacherExamTip" class="mt-2 text-xs text-amber-800 bg-amber-100/70 p-2.5 rounded-lg border border-amber-200/60">
+                <!-- Exam tips injected here -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Concept Breakdown & Hanja Meaning Section -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <!-- Card 1: 한자어 뜻풀이 -->
+          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+            <div class="text-xs font-bold text-slate-400 uppercase mb-1">한자 이름의 비밀</div>
+            <div id="hanjaExplanation" class="text-slate-800 font-bold text-lg mb-1"></div>
+            <p id="hanjaDetail" class="text-xs text-slate-600 leading-relaxed"></p>
+          </div>
+
+          <!-- Card 2: 영단어와 직관 매칭 -->
+          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+            <div class="text-xs font-bold text-slate-400 uppercase mb-1">영어 직관 (English Meaning)</div>
+            <div id="englishIntuition" class="text-indigo-600 font-bold text-lg mb-1"></div>
+            <p id="englishIntuitionDetail" class="text-xs text-slate-600 leading-relaxed"></p>
+          </div>
+
+          <!-- Card 3: 문장에서 하는 핵심 임무 -->
+          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+            <div class="text-xs font-bold text-slate-400 uppercase mb-1">문장 속 슈퍼 파워 (역할)</div>
+            <div id="coreRole" class="text-emerald-600 font-bold text-lg mb-1"></div>
+            <p id="coreRoleDetail" class="text-xs text-slate-600 leading-relaxed"></p>
+          </div>
+        </div>
+
+        <!-- Detailed 5+ Interactive Examples Section -->
+        <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+          <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-5">
+            <div>
+              <h3 class="text-base font-bold text-slate-900 flex items-center space-x-2">
+                <i class="fa-solid fa-list-check text-blue-600"></i>
+                <span>실전 예문 분석 (최소 5개 엄선)</span>
+              </h3>
+              <p class="text-xs text-slate-500 mt-0.5">단어를 터치해보면 품사와 한국식 문법 역할을 즉시 확인할 수 있습니다.</p>
+            </div>
+            <div class="text-xs bg-slate-100 text-slate-600 px-3 py-1 rounded-full font-medium">
+              💡 터치해서 분석창 열기
+            </div>
+          </div>
+
+          <!-- Examples List Container -->
+          <div id="examplesContainer" class="space-y-4">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+
+        <!-- Interactive Mini Quiz / Game Section for iPad -->
+        <div class="bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 text-white rounded-2xl p-6 shadow-lg">
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center space-x-3">
+              <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-yellow-400 text-lg">
+                <i class="fa-solid fa-gamepad"></i>
+              </div>
+              <div>
+                <h4 class="font-bold text-base text-white">아이와 함께하는 즉석 탭 챌린지!</h4>
+                <p class="text-xs text-slate-300">선생님이 문장을 가리키고 아이가 정답 품사를 누르게 해보세요.</p>
+              </div>
+            </div>
+            <span id="quizBadge" class="text-xs bg-indigo-500/30 border border-indigo-400/40 text-indigo-200 px-3 py-1 rounded-full font-mono">
+              Level 1
+            </span>
+          </div>
+
+          <div id="quizContainer" class="bg-white/10 backdrop-blur-md rounded-xl p-5 border border-white/10">
+            <!-- Injected by JS -->
+          </div>
+        </div>
+
+        <!-- Korean Exam Comparison Cheat Sheet -->
+        <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm mb-10">
+          <h3 class="text-sm font-bold text-slate-900 mb-2 flex items-center space-x-2">
+            <i class="fa-solid fa-graduation-cap text-indigo-600"></i>
+            <span>한국 내신/수능 문법 시험 포인트 (선생님 참고용)</span>
+          </h3>
+          <div id="examFocusPoints" class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs text-slate-600">
+            <!-- Injected by JS -->
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Blueprint View Container (Blueprint Architecture Mode) -->
+      <div id="blueprintViewContainer" class="hidden p-6 space-y-6 max-w-5xl mx-auto w-full">
+        <!-- Blueprint Hero & Blueprint Content injected by JS -->
+        <div id="blueprintContentArea" class="space-y-6"></div>
+      </div>
+    </main>
+
+    <!-- Overlay Canvas for Tablet Pen Drawing (Hidden by default) -->
+    <canvas id="drawingCanvas" class="absolute inset-0 pointer-events-none z-40 w-full h-full"></canvas>
+
+    <!-- Pen Floating Toolbar (Only visible when pen mode is active) -->
+    <div id="penToolbar" class="hidden absolute bottom-6 right-6 z-50 bg-white border border-slate-300 shadow-2xl rounded-2xl p-2.5 flex items-center space-x-3 backdrop-blur-lg">
+      <div class="flex items-center space-x-1.5 border-r border-slate-200 pr-3">
+        <button class="pen-color-btn w-6 h-6 rounded-full bg-red-500 ring-2 ring-offset-2 ring-transparent transition" data-color="#ef4444"></button>
+        <button class="pen-color-btn w-6 h-6 rounded-full bg-blue-600 ring-2 ring-offset-2 ring-blue-600 transition" data-color="#2563eb"></button>
+        <button class="pen-color-btn w-6 h-6 rounded-full bg-amber-500 ring-2 ring-offset-2 ring-transparent transition" data-color="#f59e0b"></button>
+        <button class="pen-color-btn w-6 h-6 rounded-full bg-emerald-600 ring-2 ring-offset-2 ring-transparent transition" data-color="#059669"></button>
+      </div>
+      
+      <!-- Pen Width Selection -->
+      <div class="flex items-center space-x-1 border-r border-slate-200 pr-3">
+        <button id="penSizeThin" class="px-2 py-1 text-xs rounded bg-slate-100 hover:bg-slate-200 font-bold">Thin</button>
+        <button id="penSizeThick" class="px-2 py-1 text-xs rounded bg-blue-100 text-blue-700 font-bold">Thick</button>
+      </div>
+
+      <!-- Clear Canvas -->
+      <button id="clearCanvasBtn" class="px-2.5 py-1 text-xs font-semibold text-rose-600 hover:bg-rose-50 rounded-lg transition flex items-center space-x-1">
+        <i class="fa-solid fa-trash-can"></i>
+        <span>지우기</span>
+      </button>
+
+      <!-- Close Pen Mode -->
+      <button id="closePenBtn" class="p-1.5 text-slate-400 hover:text-slate-700 rounded-lg">
+        <i class="fa-solid fa-xmark text-sm"></i>
+      </button>
+    </div>
+
+  </div>
+
+  <!-- Interactive Modal / Drawer for detailed word click -->
+  <div id="wordDetailModal" class="hidden fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-sm w-full p-5 shadow-2xl border border-slate-200 transform transition-all scale-95 opacity-0 duration-150" id="modalCard">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div>
+          <span id="modalWord" class="text-xl font-black text-slate-900">Word</span>
+          <span id="modalPosBadge" class="ml-2 text-xs font-bold px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-700">품사</span>
+        </div>
+        <button id="closeModalBtn" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="mt-4 space-y-3">
+        <div>
+          <p class="text-xs font-semibold text-slate-400">한국식 문법 명칭 & 해설</p>
+          <p id="modalMeaning" class="text-sm font-semibold text-slate-800 mt-0.5"></p>
+        </div>
+        <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+          <p class="text-xs font-semibold text-slate-400">문장에서의 역할 (Function)</p>
+          <p id="modalFunction" class="text-xs text-slate-700 mt-1 leading-relaxed"></p>
+        </div>
+        <div class="bg-amber-50 p-3 rounded-xl border border-amber-100 text-xs text-amber-900">
+          <p class="font-bold mb-0.5"><i class="fa-solid fa-star text-amber-500 mr-1"></i>선생님 티칭 질문 가이드</p>
+          <p id="modalQuestionPrompt"></p>
+        </div>
+      </div>
+      <button id="modalConfirmBtn" class="w-full mt-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-sm transition">
+        확인 완료!
+      </button>
+    </div>
+  </div>
+
+  <!-- Comprehensive Data Store for the 8 Parts of Speech -->
+  <script>
+    const posData = [
+      {
+        id: "noun",
+        nameKr: "명사",
+        nameEn: "Noun",
+        icon: "fa-cubes-stacked",
+        color: "blue",
+        badgeBg: "bg-blue-100 text-blue-800",
+        oneLiner: "세상 모든 것의 '이름표' (Name Tag)",
+        hanja: "이름 명(名) : 그냥 '이름표'야!",
+        hanjaDetail: "피자, 레오, 도서관, 그리고 마음속의 '사랑'이나 '용기'처럼 세상 모든 것에 붙여놓은 이름표예요.",
+        englishIntuition: "Noun = What is it?",
+        englishIntuitionDetail: "영어로 말할 때 '저게 뭐야?' 했을 때 나오는 모든 단어가 Noun이에요.",
+        coreRole: "문장의 진짜 주인공(주어) & 먹잇감(목적어)",
+        coreRoleDetail: "문장에서 '누가?' 했는지, '무엇을?' 먹었는지 자리에 들어가는 레고 블록이에요.",
+        teacherScript: "“OO야, 넌 이미 'apple', 'pizza', 'Seoul' 다 알지? 한국말로는 이걸 '이름 명(名)'자를 써서 '명사'라고 해. 세상 모든 물건이랑 사람에 붙은 '이름표'라는 뜻이야! 너 영어로 쓸 때 'a car'나 'cars'처럼 톡톡 셀 수 있는 게 있고, 'water'처럼 콸콸 흘러서 s 못 붙이는 게 있잖아? 한국 시험은 딱 그거 하나로 널 낚으려고 해. 그 비밀만 보면 끝이야!”",
+        examTips: "시험 낚시 공식: '하나둘 셀 수 있어서 s 붙이는 녀석' vs '물, 빵, 공기처럼 덩어리라 s 절대 못 붙이는 녀석' 구별하기!",
+        examPoints: [
+          { title: "셀 수 있는 낱개 vs 못 세는 덩어리", desc: "사과(apples)는 세지만, 물(water), 치즈(cheese), 돈(money)은 s를 붙이지 않아요!" },
+          { title: "세상에 딱 하나인 특별한 이름", desc: "Leo, Seoul, Sunday는 세상에 단 하나뿐이라 첫 글자를 무조건 왕대문자로 씁니다." }
+        ],
+        examples: [
+          {
+            sentence: "Leo reads an interesting book in the library.",
+            translation: "레오는 도서관에서 재미있는 책을 읽어요.",
+            breakdown: [
+              { word: "Leo", pos: "사람 이름표", role: "주인공(주어)", prompt: "사람 이름이니까 대문자로 출발!" },
+              { word: "book", pos: "물건 이름표", role: "읽는 대상(목적어)", prompt: "책은 셀 수 있으니까 an interesting book!" },
+              { word: "library", pos: "장소 이름표", role: "도서관", prompt: "건물 장소 이름표." }
+            ],
+            targetWords: ["Leo", "book", "library"]
+          },
+          {
+            sentence: "Cats love warm milk and tuna.",
+            translation: "고양이들은 따뜻한 우유와 참치를 좋아해요.",
+            breakdown: [
+              { word: "Cats", pos: "동물 이름표 (셀 수 있음)", role: "주인공", prompt: "고양이는 셀 수 있어서 -s를 톡 붙였어요!" },
+              { word: "milk", pos: "액체 덩어리 이름표 (셀 수 없음)", role: "좋아하는 대상", prompt: "우유는 쏟아져서 셀 수 없으니 milks 안 돼요!" }
+            ],
+            targetWords: ["Cats", "milk"]
+          },
+          {
+            sentence: "Happiness is much more important than money.",
+            translation: "행복은 돈보다 훨씬 더 중요해요.",
+            breakdown: [
+              { word: "Happiness", pos: "기분/마음 이름표", role: "주인공", prompt: "손으로 만질 순 없지만 우리 마음속 기분의 이름표!" },
+              { word: "money", pos: "덩어리 물질 이름표", role: "비교 대상", prompt: "돈(money)도 영어에서는 셀 수 없는 덩어리로 봐요." }
+            ],
+            targetWords: ["Happiness", "money"]
+          },
+          {
+            sentence: "My sister bought two sweet apples.",
+            translation: "내 여동생이 달콤한 사과 두 개를 샀어요.",
+            breakdown: [
+              { word: "sister", pos: "가족 이름표", role: "주인공", prompt: "여동생이라는 사람 이름표." },
+              { word: "apples", pos: "과일 이름표 (2개)", role: "산 대상", prompt: "사과 2개니까 뒤에 -s!" }
+            ],
+            targetWords: ["sister", "apples"]
+          },
+          {
+            sentence: "Seoul is a very beautiful city.",
+            translation: "서울은 정말 아름다운 도시예요.",
+            breakdown: [
+              { word: "Seoul", pos: "도시 이름표", role: "주인공", prompt: "세상에 딱 하나인 도시라 왕대문자 S!" },
+              { word: "city", pos: "장소 이름표", role: "설명", prompt: "도시라는 일반 이름표." }
+            ],
+            targetWords: ["Seoul", "city"]
+          }
+        ],
+        quiz: {
+          question: "다음 중 손으로 톡톡 셀 수 없어서 뒤에 '-s'를 붙이면 한국 시험에서 빨간 줄 쫙 그어지는 단어는?",
+          sentenceText: "Which one CANNOT have '-s'? [ books / cars / water / dogs ]",
+          options: ["books (책들)", "cars (자동차들)", "water (물)", "dogs (강아지들)"],
+          correctIndex: 2,
+          explanation: "물(water)은 흐르는 액체 덩어리라서 1개, 2개 손으로 못 세요! 그래서 'waters'라고 쓰면 절대 안 되고 그냥 'water'라고 써야 정답!"
+        }
+      },
+      {
+        id: "pronoun",
+        nameKr: "대명사",
+        nameEn: "Pronoun",
+        icon: "fa-user-group",
+        color: "indigo",
+        badgeBg: "bg-indigo-100 text-indigo-800",
+        oneLiner: "똑같은 이름 또 부르기 싫어서 쓰는 '대타 선수' (Avatar)",
+        hanja: "대신할 대(代) : 이름 대신 부르기!",
+        hanjaDetail: "영어가 제일 귀찮아하는 건 똑같은 이름 또 말하기예요. Tom 대신 'he', 민지 대신 'she'를 대타로 내보내요.",
+        englishIntuition: "Pro (= instead of) + Noun",
+        englishIntuitionDetail: "Tom likes Tom's dog because Tom...? No! He likes his dog because he...!",
+        coreRole: "문장을 깔끔하게 다이어트 시키기",
+        coreRoleDetail: "이름을 반복해서 부르지 않고 '걔가, 걔를, 걔 거, 자기 자신'으로 쏙 바꿔줍니다.",
+        teacherScript: "“OO야, 만약 내가 '민수는 민수의 가방을 메고 민수의 학교에 갔다'고 하면 어때? 답답하지? 영어는 똑같은 말 두 번 하는 걸 제일 싫어해! 그래서 이름 대신 'he, his, him' 같은 '대타 선수'를 내보내. 한자로 대신할 대(代) 자를 써서 '대명사'라고 불러. 주어 자리에 오냐, 목적어 자리에 오냐에 따라 옷을 갈아입는 마법만 보면 돼!”",
+        examTips: "한국 시험 1등 포인트: 주격(I), 소유격(my), 목적격(me), 소유대명사(mine), 재귀대명사(myself) 5단 변신 테이블 채우기!",
+        examPoints: [
+          { title: "인칭대명사 5단 변신", desc: "주격(은/는/이/가) ➡️ 소유격(~의) ➡️ 목적격(~을/를/에게) ➡️ 소유대명사(~의 것) ➡️ 재귀대명사(~자신)" },
+          { title: "손가락 콕! 지시대명사", desc: "가까운 건 this(복수는 these), 먼 건 that(복수는 those). 시험에선 앞에 나온 단어 대신할 때도 that/those를 써요!" }
+        ],
+        examples: [
+          {
+            sentence: "Minji loves music, and she plays the piano well.",
+            translation: "민지는 음악을 좋아하고, 그녀는 피아노를 잘 쳐요.",
+            breakdown: [
+              { word: "she", pos: "주격 대명사 (은/는/이/가)", role: "두 번째 문장 주인공", prompt: "Minji를 또 쓰기 싫어서 대타 'she' 출동!" }
+            ],
+            targetWords: ["she"]
+          },
+          {
+            sentence: "This is my jacket, and that is yours.",
+            translation: "이건 내 재킷이고, 저건 네 거야.",
+            breakdown: [
+              { word: "This", pos: "가까운 것 가리키는 지시대명사", role: "주어", prompt: "가까이 있는 물건을 가리킬 때 This!" },
+              { word: "yours", pos: "소유대명사 (~의 것)", role: "너의 것", prompt: "your jacket을 한 단어로 줄인 게 yours!" }
+            ],
+            targetWords: ["This", "yours"]
+          },
+          {
+            sentence: "I looked at myself in the mirror.",
+            translation: "나는 거울 속의 내 자신을 바라보았어요.",
+            breakdown: [
+              { word: "myself", pos: "재귀대명사 (주어와 같은 사람)", role: "바라보는 대상", prompt: "내가 나 자신을 볼 때는 me가 아니라 myself!" }
+            ],
+            targetWords: ["myself"]
+          },
+          {
+            sentence: "The teacher helped him with the math problem.",
+            translation: "선생님께서 그를(그에게) 수학 문제를 도와주셨어요.",
+            breakdown: [
+              { word: "him", pos: "목적격 대명사 (~을/를, ~에게)", role: "도움을 받는 대상", prompt: "he(주격)가 아니라 목적어 자리니까 him!" }
+            ],
+            targetWords: ["him"]
+          },
+          {
+            sentence: "These shoes are cleaner than those.",
+            translation: "이 신발들이 저것들보다 더 깨끗해.",
+            breakdown: [
+              { word: "These", pos: "가까운 복수 가리킴", role: "신발 꾸밈", prompt: "신발이 두 짝(shoes)이니까 This가 아니라 These!" },
+              { word: "those", pos: "멀리 있는 복수 지시대명사", role: "비교 대상", prompt: "저 신발들(those shoes)을 줄여서 those!" }
+            ],
+            targetWords: ["These", "those"]
+          }
+        ],
+        quiz: {
+          question: "빈칸에 들어갈 알맞은 대타 선수는? 'Tom made this pizza all by [ &nbsp; ].'",
+          sentenceText: "Tom made this pizza all by [ &nbsp;?&nbsp; ]. (탐이 스스로 직접 만들었다)",
+          options: ["he (그는)", "him (그를)", "his (그의)", "himself (그 자신)"],
+          correctIndex: 3,
+          explanation: "주어인 Tom이 '남의 도움 없이 혼자 힘으로 자기 스스로' 했다고 말할 때는 재귀대명사인 'himself'를 써야 완벽해요!"
+        }
+      },
+      {
+        id: "verb",
+        nameKr: "동사",
+        nameEn: "Verb",
+        icon: "fa-bolt-lightning",
+        color: "amber",
+        badgeBg: "bg-amber-100 text-amber-800",
+        oneLiner: "문장의 심장 엔진! '움직임 & 상태' (Action & State)",
+        hanja: "움직일 동(動) : 몸을 움직이거나 상태를 나타내!",
+        hanjaDetail: "달리고(run), 먹는(eat) 움직임뿐만 아니라 '~이다, 있다(be동사)'처럼 가만히 있는 상태도 모두 동사예요.",
+        englishIntuition: "Action & Heart Engine",
+        englishIntuitionDetail: "No verb, no sentence! 동사가 없으면 문장은 아예 시동조차 안 걸려요.",
+        coreRole: "문장에 생명 불어넣기 & 언제 일어났는지(시간/시제) 알려주기",
+        coreRoleDetail: "한국 시험에서는 자동사, 타동사, 감각동사, 수여동사, 사역동사 5총사 구별이 1등 시험 문제예요!",
+        teacherScript: "“OO야, 엔진 없는 스포츠카가 굴러갈 수 있을까? 절대 안 되지! 문장의 엔진이 바로 동사(Verb)야. 근데 한국 시험에서는 동사를 5가지 특수 부대로 나눠서 문제를 내! 혼자 노는 녀석(자동사), 짝꿍이 필요한 녀석(타동사), 눈코입귀로 느끼는 녀석(감각동사), 선물 주는 녀석(수여동사), 시키는 녀석(사역동사)! 이 5개 공식만 꿰뚫고 있으면 학교 시험은 완전 프리패스야!”",
+        examTips: "핵심 공식: 감각동사 뒤엔 무조건 형용사! 사역동사(make/have/let) 뒤엔 무조건 동사원형!",
+        examPoints: [
+          { title: "자동사 vs 타동사", desc: "뒤에 '을/를(목적어)' 없이 혼자 노는 자동사(run, fly) vs 뒤에 꼭 먹잇감이 필요한 타동사(eat pizza)" },
+          { title: "감각동사 + 형용사 공식", desc: "smell, taste, sound 뒤에 한국말로는 '~하게' 같아도 무조건 형용사(delicious, sweet)!" },
+          { title: "사역동사 + 목적어 + 동사원형", desc: "make, have, let 대장이 나오면 뒤에 to 안 붙인 순수 동사원형만 와야 함!" }
+        ],
+        examples: [
+          {
+            sentence: "The birds fly high in the blue sky.",
+            translation: "새들이 파란 하늘 높이 날아다녀요.",
+            breakdown: [
+              { word: "fly", pos: "자동사 (혼자 노는 동사)", role: "동작 엔진", prompt: "뒤에 '을/를' 필요 없이 혼자서도 완벽하게 뜻이 통하는 자동사!" }
+            ],
+            targetWords: ["fly"]
+          },
+          {
+            sentence: "Leo loves chocolate cookies so much.",
+            translation: "레오는 초콜릿 쿠키를 정말 좋아해요.",
+            breakdown: [
+              { word: "loves", pos: "타동사 (짝꿍/목적어가 꼭 필요한 동사)", role: "동작 엔진", prompt: "'무엇을?' 좋아하는지 뒤에 쿠키(목적어)가 꼭 있어야 하는 타동사!" }
+            ],
+            targetWords: ["loves"]
+          },
+          {
+            sentence: "This warm soup tastes delicious.",
+            translation: "이 따뜻한 수프는 맛있는 맛이 나요.",
+            breakdown: [
+              { word: "tastes", pos: "감각동사 (맛을 느낌)", role: "상태 연결", prompt: "감각동사 뒤에는 deliciously(부사) 절대 금지! 무조건 형용사 delicious!" }
+            ],
+            targetWords: ["tastes"]
+          },
+          {
+            sentence: "Mom gave me a wonderful birthday present.",
+            translation: "엄마가 나에게 멋진 생일 선물을 주셨어요.",
+            breakdown: [
+              { word: "gave", pos: "수여동사 (선물 주는 4형식 동사)", role: "~에게 ...을 주다", prompt: "me(나에게) + present(선물을) 두 개를 연달아 선물 주는 동사!" }
+            ],
+            targetWords: ["gave"]
+          },
+          {
+            sentence: "The coach made us practice very hard.",
+            translation: "코치님은 우리가 아주 열심히 연습하게 시켰어요.",
+            breakdown: [
+              { word: "made", pos: "사역동사 (강제로 시키는 대장)", role: "명령/시킴", prompt: "사역동사 made 덕분에 practice 앞에 'to'가 도망치고 동사원형만 남았어요!" }
+            ],
+            targetWords: ["made"]
+          }
+        ],
+        quiz: {
+          question: "사역동사 공식 챌린지! 빈칸에 알맞은 형태는? 'My dad let me [ &nbsp; ] his new computer.'",
+          sentenceText: "My dad let me [ &nbsp;?&nbsp; ] his new computer. (아빠가 나에게 쓰도록 허락해주셨다)",
+          options: ["use (동사원형)", "to use (to부정사)", "using (ing형)", "used (과거형)"],
+          correctIndex: 0,
+          explanation: "'let'은 대장 사역동사예요! 사역동사(make, have, let) 뒤에는 to를 붙이지 않고 오직 순수한 [동사원형: use]만 올 수 있어요!"
+        }
+      },
+      {
+        id: "adjective",
+        nameKr: "형용사",
+        nameEn: "Adjective",
+        icon: "fa-palette",
+        color: "emerald",
+        badgeBg: "bg-emerald-100 text-emerald-800",
+        oneLiner: "명사에게 예쁜 옷을 입혀주는 '스타일리스트' (Decorator)",
+        hanja: "모양 형(形) : 생김새와 모양을 찰칵!",
+        hanjaDetail: "어떤 모양인지(round, big), 어떤 맛인지(sweet), 어떤 색인지(red) 명사의 모습을 알록달록 꾸며줘요.",
+        englishIntuition: "Adjective = Color & Style for Nouns",
+        englishIntuitionDetail: "명사(Noun)의 가장 친한 베프! 명사 없인 형용사도 못 살아요.",
+        coreRole: "① 명사 앞에 모자 씌우기 (a smart boy), ② 뒤에서 상태 칭찬하기 (The boy is smart)",
+        coreRoleDetail: "한국 시험에서는 성질을 나타내는 것뿐만 아니라 many/much, few/little 같은 '수량 형용사'를 엄청 따져요!",
+        teacherScript: "“OO야, 그냥 'dog'라고만 하면 어떤 강아지인지 머릿속에 안 떠오르지? 근데 'a tiny, fluffy white dog'라고 하면 어때? 하얗고 솜사탕 같은 강아지가 딱 그려지지? 이렇게 명사한테 모자 씌워주고 옷 입혀주는 단어가 '형용사'야. 한국 시험에선 '셀 수 있는 명사엔 many/few', '물처럼 못 세는 명사엔 much/little' 짝짓는 걸로 시험을 많이 내!”",
+        examTips: "시험 단골 공식: many + 셀 수 있는 복수명사 vs much + 못 세는 단수명사 / a few (조금 있는) vs few (거의 없는)!",
+        examPoints: [
+          { title: "명사 앞 모자 vs 서술 보어", desc: "a cute puppy(명사 수식) vs The puppy is cute(상태 설명 보어)" },
+          { title: "수량 형용사의 함정", desc: "셀 수 있으면 many / few / a few, 셀 수 없으면 much / little / a little!" },
+          { title: "-thing 단어는 뒤에서 꾸미기", desc: "something cold, anything sweet처럼 -thing으로 끝나면 형용사가 뒤로 쏙 들어가요!" }
+        ],
+        examples: [
+          {
+            sentence: "She adopted a small and energetic puppy.",
+            translation: "그녀는 작고 활발한 강아지 한 마리를 입양했어요.",
+            breakdown: [
+              { word: "small", pos: "성질 형용사", role: "강아지 꾸밈", prompt: "강아지 크기 모양 옷 입히기!" },
+              { word: "energetic", pos: "상태 형용사", role: "강아지 꾸밈", prompt: "활기찬 상태를 설명." }
+            ],
+            targetWords: ["small", "energetic"]
+          },
+          {
+            sentence: "There are many students in the clean classroom.",
+            translation: "깨끗한 교실 안에 많은 학생들이 있어요.",
+            breakdown: [
+              { word: "many", pos: "수량 형용사 (수)", role: "students 꾸밈", prompt: "학생들은 1명 2명 셀 수 있으니까 much가 아니라 many!" },
+              { word: "clean", pos: "상태 형용사", role: "교실 꾸밈", prompt: "깨끗한 교실 모자 씌우기." }
+            ],
+            targetWords: ["many", "clean"]
+          },
+          {
+            sentence: "I have little time, so I need to hurry.",
+            translation: "나는 시간이 거의 없어서, 서둘러야 해.",
+            breakdown: [
+              { word: "little", pos: "수량 형용사 (양 - 부정적)", role: "time 꾸밈", prompt: "시간(time)은 못 세는 명사이고, 'a'가 없으니 '거의 없는' 부정의 뜻!" }
+            ],
+            targetWords: ["little"]
+          },
+          {
+            sentence: "I want to drink something warm.",
+            translation: "나 뭔가 따뜻한 걸 마시고 싶어.",
+            breakdown: [
+              { word: "warm", pos: "온도 형용사 (후치 수식)", role: "something 뒤에서 꾸밈", prompt: "warm something이 아니라 something warm! -thing 단어의 특권!" }
+            ],
+            targetWords: ["warm"]
+          },
+          {
+            sentence: "Those fresh strawberries look so sweet.",
+            translation: "저 신선한 딸기들은 정말 달콤해 보여.",
+            breakdown: [
+              { word: "fresh", pos: "상태 형용사", role: "딸기 앞 수식", prompt: "신선한 딸기!" },
+              { word: "sweet", pos: "맛 형용사 (보어)", role: "look 뒤 상태 설명", prompt: "look 감각동사 뒤에는 sweetly(부사) 안 되고 형용사 sweet!" }
+            ],
+            targetWords: ["fresh", "sweet"]
+          }
+        ],
+        quiz: {
+          question: "한국 중학교 내신 1등 문제! 빈칸에 알맞은 수량 형용사는? 'He doesn't have [ &nbsp; ] money.'",
+          sentenceText: "He doesn't have [ &nbsp;?&nbsp; ] money. (그는 돈이 많이 없다)",
+          options: ["many", "much", "a few", "few"],
+          correctIndex: 1,
+          explanation: "돈(money)은 영어에서 손으로 1개, 2개 못 세는 '양(불가산 명사)'이에요! 셀 수 없는 명사 앞에는 many가 아니라 [much]를 써야 정답입니다!"
+        }
+      },
+      {
+        id: "adverb",
+        nameKr: "부사",
+        nameEn: "Adverb",
+        icon: "fa-wand-magic-sparkles",
+        color: "purple",
+        badgeBg: "bg-purple-100 text-purple-800",
+        oneLiner: "명사 빼고 다 꾸며주는 만능 '맛소금 양념' (Seasoning)",
+        hanja: "도울 부(副) : 옆에서 도와주는 도우미!",
+        hanjaDetail: "부반장, 부조종사 할 때의 바로 그 '부'예요! 주인공은 아니지만 '어떻게? 얼마나? 어디서? 언제?' 양념을 쳐줘요.",
+        englishIntuition: "Ad-Verb = Adds detail to verbs and more",
+        englishIntuitionDetail: "Tells us HOW, WHEN, WHERE, and TO WHAT DEGREE!",
+        coreRole: "동사, 형용사, 다른 부사, 문장 전체를 생생하게 맛내기",
+        coreRoleDetail: "단, 명사는 형용사한테 양보하기 때문에 부사는 명사 앞에는 절대 못 가요!",
+        teacherScript: "“OO야, 팝콘에 치즈 가루나 카라멜 시럽을 팍팍 뿌리면 맛이 10배 좋아지지? 그 마법 양념이 바로 부사(Adverb)야. ‘달린다’를 ‘얼마나 빠르게(fast)’, ‘말한다’를 ‘어떻게 공손하게(politely)’ 하는지 동사에 양념을 쳐줘. 한국 시험에선 ‘얼마나 자주 하는지’ 묻는 빈도부사 위치(조동사·be동사 뒤, 일반동사 앞)를 정말 좋아해!”",
+        examTips: "시험 공식 암기: 빈도부사 위치 = [조동사 / be동사 뒤, 일반동사 앞 (조·be 뒤, 일 앞!)]",
+        examPoints: [
+          { title: "빈도부사 위치 공식", desc: "always, usually, often, sometimes, never는 무조건 일반동사 앞, be동사 뒤에 쏙!" },
+          { title: "-ly 함정 단어 주의", desc: "friendly(친근한), lovely(사랑스러운)는 ly로 끝나지만 '형용사'예요!" },
+          { title: "형태가 똑같은 부사", desc: "fast(빨리), hard(열심히), late(늦게)는 -ly 안 붙여도 그 자체로 부사예요!" }
+        ],
+        examples: [
+          {
+            sentence: "The cheetah runs extremely fast.",
+            translation: "치타는 극도로 빠르게 달려요.",
+            breakdown: [
+              { word: "extremely", pos: "정도 부사 (얼마나)", role: "fast 꾸밈", prompt: "얼마나 빠른지 양념 팍팍!" },
+              { word: "fast", pos: "양태 부사 (어떻게)", role: "runs 꾸밈", prompt: "fastly라는 단어는 세상에 없어요! fast 자체가 부사!" }
+            ],
+            targetWords: ["extremely", "fast"]
+          },
+          {
+            sentence: "She always wakes up early in the morning.",
+            translation: "그녀는 아침에 항상 일찍 일어나요.",
+            breakdown: [
+              { word: "always", pos: "빈도 부사 (100% 빈도)", role: "일반동사 wakes 앞", prompt: "조be 뒤, '일반동사 앞' 자리 철통 준수!" },
+              { word: "early", pos: "시간 부사", role: "wakes up 꾸밈", prompt: "일찍!" }
+            ],
+            targetWords: ["always", "early"]
+          },
+          {
+            sentence: "Fortunately, the heavy rain stopped suddenly.",
+            translation: "다행스럽게도, 폭우가 갑자기 멈췄어요.",
+            breakdown: [
+              { word: "Fortunately", pos: "문장 전체 부사", role: "문장 전체 분위기", prompt: "문장 맨 앞에서 '다행히도~' 하고 깃발 들기!" },
+              { word: "suddenly", pos: "양태 부사 (어떻게)", role: "stopped 꾸밈", prompt: "갑작스럽게 멈췄다는 동작 수식." }
+            ],
+            targetWords: ["Fortunately", "suddenly"]
+          },
+          {
+            sentence: "He studied very hard for the exam.",
+            translation: "그는 시험을 위해 정말 열심히 공부했어요.",
+            breakdown: [
+              { word: "very", pos: "정도 부사", role: "hard 꾸밈", prompt: "매우!" },
+              { word: "hard", pos: "부사 (열심히)", role: "studied 꾸밈", prompt: "hardly는 '거의 안 한다'는 뜻이니 절대 헷갈리지 말 것!" }
+            ],
+            targetWords: ["very", "hard"]
+          },
+          {
+            sentence: "The water was warm enough to swim.",
+            translation: "물은 수영하기에 충분히 따뜻했어요.",
+            breakdown: [
+              { word: "enough", pos: "정도 부사 (충분히)", role: "warm 뒤에서 수식", prompt: "enough는 형용사 뒤에서 꾸며주는 특별한 위치 규칙이 있어요!" }
+            ],
+            targetWords: ["enough"]
+          }
+        ],
+        quiz: {
+          question: "빈도부사 위치 공식 (조·be 뒤, 일 앞)! 올바른 위치에 들어간 문장은?",
+          sentenceText: "Where should 'always' go in this sentence? [ He / eats / breakfast / at 7 ]",
+          options: ["He always eats breakfast.", "He eats always breakfast.", "He eats breakfast always.", "Always he eats breakfast."],
+          correctIndex: 0,
+          explanation: "'eats'는 일반동사예요! 빈도부사는 '일반동사 앞 (일 앞)'에 와야 하므로 [He always eats breakfast]가 완벽한 문장이에요!"
+        }
+      },
+      {
+        id: "preposition",
+        nameKr: "전치사",
+        nameEn: "Preposition",
+        icon: "fa-location-dot",
+        color: "rose",
+        badgeBg: "bg-rose-100 text-rose-800",
+        oneLiner: "명사 앞에 딱 서서 위치·시간을 알려주는 '내비게이션 깃발' (Signpost)",
+        hanja: "앞 전(前) + 둘 치(置) : 명사 '앞'에 두는 말!",
+        hanjaDetail: "한자 그대로 '명사 앞(前)에 콕 놓는다(置)'는 뜻이에요. in, on, at처럼 명사 바로 앞에 서서 '어디에 있는지, 몇 시인지' 길을 안내해줘요.",
+        englishIntuition: "Pre (= Before) + Position (= 위치)",
+        englishIntuitionDetail: "Placed BEFORE a noun! in the room, on Sunday, at 3 o'clock.",
+        coreRole: "명사와 합체해서 [전치사 + 명사] 세트 만들기",
+        coreRoleDetail: "한국 시험 1등 법칙: 전치사 뒤에 동사를 쓰고 싶으면 무조건 옷을 갈아입혀서 -ing(동명사)를 붙여야 해요!",
+        teacherScript: "“OO야, 네비게이션이 '300미터 앞에서 우회전하세요'라고 안내해주지? 전치사(Preposition)가 바로 문장의 내비게이션이야. 한자로 앞 전(前), 둘 치(置)라 명사 '앞에 딱 서 있는 말'이야. 한국 시험 1등 킬러 문항이 뭔지 알아? 전치사 뒤에 동사가 오고 싶으면 무조건 '-ing(동명사)'로 꼬리를 바꿔야 한다는 거야! thank you for coming처럼 말이지!”",
+        examTips: "시험 절대 공식: 전치사 뒤에는 무조건 명사 또는 [동사-ing (동명사)]! to부정사나 동사원형은 절대 못 옴!",
+        examPoints: [
+          { title: "시간/장소 3단 크기 (at < on < in)", desc: "at은 콕 찍은 점(at 3:00, at school), on은 면/날짜(on Friday), in은 넓은 공간/달/연도(in Seoul, in July)" },
+          { title: "전치사 + 동명사(-ing)", desc: "interested in learning, good at swimming처럼 전치사 뒤엔 무조건 ing!" }
+        ],
+        examples: [
+          {
+            sentence: "We meet at the bus stop at 2 PM.",
+            translation: "우리는 오후 2시에 버스 정류장에서 만나요.",
+            breakdown: [
+              { word: "at the bus stop", pos: "장소 점 콕 찍기", role: "위치 안내", prompt: "버스 정류장이라는 콕 찍은 특정 지점!" },
+              { word: "at 2 PM", pos: "시간 점 콕 찍기", role: "시각 안내", prompt: "정확한 시각 앞에는 무조건 at!" }
+            ],
+            targetWords: ["at"]
+          },
+          {
+            sentence: "The cat is sleeping on the soft sofa.",
+            translation: "고양이가 푹신한 소파 위에서 자고 있어요.",
+            breakdown: [
+              { word: "on", pos: "표면 접촉 전치사", role: "소파 표면 위", prompt: "표면에 딱 붙어있는 느낌의 on!" }
+            ],
+            targetWords: ["on"]
+          },
+          {
+            sentence: "Thank you for helping me with my homework.",
+            translation: "내 숙제를 도와줘서 정말 고마워.",
+            breakdown: [
+              { word: "for helping", pos: "전치사 + 동명사(-ing)", role: "고마운 이유", prompt: "for가 전치사니까 help 뒤에 -ing를 찰떡같이 붙여야 해요!" }
+            ],
+            targetWords: ["for"]
+          },
+          {
+            sentence: "She walked into the room through the front door.",
+            translation: "그녀는 앞문을 통과해 방 안으로 걸어 들어갔어요.",
+            breakdown: [
+              { word: "into", pos: "방향 전치사 (밖에서 안으로)", role: "방 안으로 들어감", prompt: "안으로 쏙 들어가는 역동적인 느낌!" },
+              { word: "through", pos: "관통 전치사 (통과)", role: "문을 통과함", prompt: "터널이나 문을 뚫고 지나가는 느낌." }
+            ],
+            targetWords: ["into", "through"]
+          },
+          {
+            sentence: "We will go to Canada in December.",
+            translation: "우리는 12월에 캐나다에 갈 거예요.",
+            breakdown: [
+              { word: "in December", pos: "긴 시간 전치사 (월/연도)", role: "12월에", prompt: "한 달 이상 긴 시간 앞에는 넓은 느낌의 in!" }
+            ],
+            targetWords: ["in"]
+          }
+        ],
+        quiz: {
+          question: "전치사의 철칙! 빈칸에 알맞은 형태는? 'I am very good at [ &nbsp; ] basketball.'",
+          sentenceText: "I am very good at [ &nbsp;?&nbsp; ] basketball. (나는 농구를 잘한다)",
+          options: ["play (동사원형)", "to play (to부정사)", "playing (동명사 -ing)", "played (과거형)"],
+          correctIndex: 2,
+          explanation: "'at'은 전치사예요! 전치사 바로 뒤에는 동사원형이나 to부정사가 절대 못 오고 오직 [동명사: playing]만 올 수 있어요!"
+        }
+      },
+      {
+        id: "conjunction",
+        nameKr: "접속사",
+        nameEn: "Conjunction",
+        icon: "fa-link",
+        color: "teal",
+        badgeBg: "bg-teal-100 text-teal-800",
+        oneLiner: "단어와 문장을 척척 이어주는 강력 '연결 고리' (Bridge & Glue)",
+        hanja: "이을 접(接) + 이을 속(續) : 척척 이어주기!",
+        hanjaDetail: "단어와 단어, 문장과 문장을 다리(Bridge)처럼 연결해줘요. and, but, or, because 같은 친구들이에요.",
+        englishIntuition: "Con (= together) + Junction (= 만나는 교차점)",
+        englishIntuitionDetail: "Like glue or train connectors that lock words or clauses together!",
+        coreRole: "문장 두 개를 하나로 자연스럽게 합치기",
+        coreRoleDetail: "한국 시험에서는 because(접속사) vs because of(전치사) 구별하는 함정 문제를 정말 많이 내요!",
+        teacherScript: "“OO야, 기차 칸과 칸을 연결해주는 쇠고리 알지? 그 연결 고리가 바로 접속사(Conjunction)야. ‘이을 접(接)’, ‘이을 속(續)’이라서 단어랑 문장을 이어줘. 한국 시험 1등 함정이 뭔지 알아? ‘because 뒤에는 주어+동사 문장’이 오고, ‘because of 뒤에는 명사 단어’만 온다는 걸로 낚시를 해. 요 차이만 알면 넌 접속사 마스터야!”",
+        examTips: "시험 100% 출제: because + 주어+동사 vs because of + 명사 / although vs in spite of 구별하기!",
+        examPoints: [
+          { title: "등위접속사 양팔 저울(병렬 구조)", desc: "and, but, or 양옆은 형태가 똑같아야 해요! (to sing and dance O / to sing and dancing X)" },
+          { title: "because vs because of", desc: "because 뒤엔 문장(S+V), because of 뒤엔 단어(명사)!" }
+        ],
+        examples: [
+          {
+            sentence: "I like dogs, but my brother likes cats.",
+            translation: "나는 강아지를 좋아하지만, 내 남동생은 고양이를 좋아해요.",
+            breakdown: [
+              { word: "but", pos: "등위접속사 (반대 내용 연결)", role: "두 문장 대조 연결", prompt: "앞뒤 문장을 반대 느낌으로 이어주는 다리!" }
+            ],
+            targetWords: ["but"]
+          },
+          {
+            sentence: "We stayed home because it rained heavily.",
+            translation: "비가 세차게 내렸기 때문에 우리는 집에 머물렀어요.",
+            breakdown: [
+              { word: "because", pos: "이유 접속사", role: "원인 문장 연결", prompt: "뒤에 'it rained(주어+동사 문장)'가 왔으니 because가 정답!" }
+            ],
+            targetWords: ["because"]
+          },
+          {
+            sentence: "You can choose either tea or coffee.",
+            translation: "당신은 차나 커피 중 하나를 고를 수 있어요.",
+            breakdown: [
+              { word: "either A or B", pos: "상관접속사 (짝꿍 단어)", role: "둘 중 하나 선택", prompt: "either의 영혼의 단짝은 or!" }
+            ],
+            targetWords: ["either", "or"]
+          },
+          {
+            sentence: "If it is sunny tomorrow, we will go on a picnic.",
+            translation: "만약 내일 날씨가 맑다면, 우리는 소풍을 갈 거예요.",
+            breakdown: [
+              { word: "If", pos: "조건 접속사 (만약 ~라면)", role: "조건 달아주기", prompt: "만약 내일 맑다면~ 하고 문장을 이끌어줘요." }
+            ],
+            targetWords: ["If"]
+          },
+          {
+            sentence: "He is not only smart but also very kind.",
+            translation: "그는 똑똑할 뿐만 아니라 매우 친절하기까지 해요.",
+            breakdown: [
+              { word: "not only A but also B", pos: "상관접속사 세트", role: "두 가지 칭찬 연결", prompt: "A뿐만 아니라 B도! 한국 시험 단골 세트!" }
+            ],
+            targetWords: ["not only", "but also"]
+          }
+        ],
+        quiz: {
+          question: "한국 시험 최다 빈출 함정! 빈칸에 알맞은 연결 고리는? 'We cancelled the soccer game [ &nbsp; ] the heavy rain.'",
+          sentenceText: "We cancelled the game [ &nbsp;?&nbsp; ] the heavy rain. (폭우 때문에)",
+          options: ["because (접속사: 뒤에 주어+동사)", "because of (전치사: 뒤에 명사)", "so", "although"],
+          correctIndex: 1,
+          explanation: "빈칸 뒤에 'the heavy rain(폭우)'이라는 명사 덩어리만 띡 나왔지, 주어+동사 문장이 아니죠? 그래서 접속사 because가 아니라 [because of]가 정답이에요!"
+        }
+      },
+      {
+        id: "interjection",
+        nameKr: "감탄사",
+        nameEn: "Interjection",
+        icon: "fa-face-laugh-squint",
+        color: "pink",
+        badgeBg: "bg-pink-100 text-pink-800",
+        oneLiner: "놀람·기쁨·슬픔이 툭 튀어나오는 '감정 폭발' (Emotion Pop)",
+        hanja: "느낄 감(感) + 탄식할 탄(歎) : 감정을 툭 터뜨려!",
+        hanjaDetail: "Wow! Oops! Ouch! 처럼 문장 맨 앞에서 혼자 느낌표(!) 달고 감정을 외치는 독립적인 녀석이에요.",
+        englishIntuition: "Inter (= 사이에) + Ject (= 던지다)",
+        englishIntuitionDetail: "Words thrown into sentences to express raw gut emotions!",
+        coreRole: "문법 규칙 없이 감정 그대로 생생하게 전달하기",
+        coreRoleDetail: "주어나 목적어 같은 복잡한 문법 규칙 없이 혼자서도 완벽하게 살아 숨 쉬는 단어예요.",
+        teacherScript: "“OO야, 레고 밟았을 때 'Ouch!' 소리가 바로 나오지? 놀랐을 땐 'Wow!' 하고 말이야. 이렇게 감정이 툭 튀어나오는 말을 '감탄사(Interjection)'라고 해. 문법 규칙도 필요 없고 혼자 느낌표 달고 놀기 때문에 8품사 중에서 가장 편하고 쉬운 친구야!”",
+        examTips: "시험 포인트: 시험 비중은 적지만, 만화/대화문 독해 지문에서 감정 상태를 묻는 문제로 종종 출제돼요!",
+        examPoints: [
+          { title: "독립된 감정 표현", desc: "문장 다른 성분과 문법적으로 얽히지 않고 쉼표(,)나 느낌표(!)로 독립해서 쓰여요." },
+          { title: "원어민 리얼 감탄사", desc: "Oops(실수했을 때), Yuck(맛없을 때), Ouch(아플 때), Hurray(신날 때)" }
+        ],
+        examples: [
+          {
+            sentence: "Wow, this new game is absolutely amazing!",
+            translation: "와, 이 새 게임 진짜 엄청나게 대단하다!",
+            breakdown: [
+              { word: "Wow", pos: "감탄사 (놀람/감탄)", role: "문장 앞 감정 폭발", prompt: "멋진 것을 보고 툭 튀어나온 감탄사!" }
+            ],
+            targetWords: ["Wow"]
+          },
+          {
+            sentence: "Oops! I accidentally dropped my ice cream.",
+            translation: "이런! 실수로 내 아이스크림을 떨어뜨렸어.",
+            breakdown: [
+              { word: "Oops", pos: "감탄사 (실수/당황)", role: "당황한 감정 표출", prompt: "작은 실수했을 때 나오는 귀여운 감탄사." }
+            ],
+            targetWords: ["Oops"]
+          },
+          {
+            sentence: "Ouch! That hot pan really hurt my hand.",
+            translation: "아야! 저 뜨거운 팬 때문에 손이 진짜 아팠어.",
+            breakdown: [
+              { word: "Ouch", pos: "감탄사 (통증)", role: "아픈 감정 표출", prompt: "몸이 아플 때 자동 반사로 나오는 소리!" }
+            ],
+            targetWords: ["Ouch"]
+          },
+          {
+            sentence: "Hurray! Tomorrow is finally the weekend.",
+            translation: "만세! 내일 드디어 주말이다.",
+            breakdown: [
+              { word: "Hurray", pos: "감탄사 (기쁨/환호)", role: "기쁨 환호", prompt: "주말을 맞이하는 행복한 외침!" }
+            ],
+            targetWords: ["Hurray"]
+          },
+          {
+            sentence: "Hey, look at that giant rainbow in the sky!",
+            translation: "야, 하늘에 뜬 저 거대한 무지개 좀 봐봐!",
+            breakdown: [
+              { word: "Hey", pos: "감탄사 (주의 끌기)", role: "친구 부르기", prompt: "친구 시선을 끌 때 부르는 감탄사." }
+            ],
+            targetWords: ["Hey"]
+          }
+        ],
+        quiz: {
+          question: "레고 블록을 맨발로 밟아서 너무 아플 때 원어민이 본능적으로 외치는 감탄사는?",
+          sentenceText: "[ &nbsp;?!&nbsp; ] That really hurts my foot!",
+          options: ["Wow (우와)", "Oops (어이쿠)", "Ouch (아야!)", "Hurray (만세)"],
+          correctIndex: 2,
+          explanation: "발이 찌릿하게 아플 때 원어민들이 가장 자연스럽게 외치는 통증 감탄사는 바로 [Ouch! (아야!)]예요!"
+        }
+      }
+    ];
+
+    // Blueprint Architecture Data (Requested Complete Real-Exam Classification)
+    const blueprintData = {
+      noun: {
+        title: "명사의 세부 종류 블루프린트 (Noun Blueprint)",
+        subtitle: "한국 시험 1등 문제: 손가락으로 셀 수 있냐(가산) vs 덩어리라 못 세냐(불가산)",
+        teacherNote: "“OO야, 한국 시험에선 명사를 외우게 하는 게 아니라, '너 water 뒤에 s 안 붙이는 거 알지? 왜 안 붙이는지 알아?'라고 물어보는 거야. 손가락으로 낱개 셀 수 있는 보통/집합명사는 a나 -s를 붙이고, 고유/물질/추상명사는 덩어리라 s를 못 붙여!”",
+        categories: [
+          {
+            name: "1. 낱개로 톡톡 셀 수 있는 명사 (가산명사 Countable)",
+            subItems: [
+              { title: "보통명사", desc: "형태가 뚜렷하고 하나둘 셀 수 있는 것", examples: "a book, two dogs, cats, apples" },
+              { title: "집합명사", desc: "사람이나 사물이 모여서 만든 한 팀/무리", examples: "family, team, class" }
+            ],
+            rule: "규칙: 앞에 a/an을 붙이거나 뒤에 복수형 -s/es를 반드시 붙여줘야 함!"
+          },
+          {
+            name: "2. 덩어리라서 못 세는 명사 (불가산명사 Uncountable)",
+            subItems: [
+              { title: "고유명사", desc: "세상에 딱 하나뿐인 사람·도시·요일 이름 (첫 글자 대문자!)", examples: "Tom, Seoul, Monday, Korea" },
+              { title: "물질명사", desc: "물, 공기, 치즈처럼 쪼개거나 흘러서 모양이 정해지지 않은 것", examples: "water, milk, bread, cheese, money" },
+              { title: "추상명사", desc: "눈에 보이지 않고 마음속 생각이나 기분인 것", examples: "love, happiness, peace, advice" }
+            ],
+            rule: "규칙: a/an 절대 금지! 뒤에 -s/es도 절대 금지! (단, a cup of water처럼 그릇 단위로 셈)"
+          }
+        ],
+        deepExamples: [
+          { en: "I drank two glasses of water this morning.", kr: "나는 오늘 아침 물 두 잔을 마셨어요.", tip: "water는 못 세니까 대신 잔(glasses)에 s를 붙여요!" },
+          { en: "Tom loves peace and happiness.", kr: "탐은 평화와 행복을 사랑해요.", tip: "peace, happiness는 추상명사라 s를 안 붙여요." },
+          { en: "Our family is having dinner together.", kr: "우리 가족은 함께 저녁을 먹고 있어요.", tip: "family는 하나의 집합 가족 단위!" },
+          { en: "Seoul is the capital city of Korea.", kr: "서울은 한국의 수도예요.", tip: "Seoul, Korea는 고유명사라 무조건 첫 글자 왕대문자!" },
+          { en: "He gave me some useful advice.", kr: "그는 나에게 몇 가지 유용한 조언을 해줬어요.", tip: "한국 시험 단골: advice는 못 세는 추상명사라 advices라고 쓰면 틀림!" }
+        ]
+      },
+      pronoun: {
+        title: "대명사의 필수 5단 격변화 & 지시대명사 블루프린트",
+        subtitle: "시험에 무조건 나오는 [주격 - 소유격 - 목적격 - 소유대명사 - 재귀대명사] & [지시대명사]",
+        teacherNote: "“OO야, 대명사는 순서가 핵심이야. '은/는/이/가(주격)' ➡️ '~의(소유격)' ➡️ '~을/를, ~에게(목적격)' ➡️ '~의 것(소유대명사)' ➡️ '자기 자신(재귀대명사)' 이 5단 변신 테이블과 손가락 콕 지시대명사만 정리하면 대명사는 100점이야!”",
+        categories: [
+          {
+            name: "1. 인칭대명사의 필수 5단 격변화 공식 (Master Table)",
+            subItems: [
+              { title: "① 주격 (은/는/이/가)", desc: "문장의 주인공 자리 (동사 앞)", examples: "I, You, He, She, It, We, They" },
+              { title: "② 소유격 (~의)", desc: "뒤에 명사 모자를 씌워줌", examples: "my, your, his, her, its, our, their" },
+              { title: "③ 목적격 (~을/를, ~에게)", desc: "동사나 전치사 뒤의 대상", examples: "me, you, him, her, it, us, them" },
+              { title: "④ 소유대명사 (~의 것)", desc: "[소유격 + 명사]를 한 단어로 꿀꺽", examples: "mine, yours, his, hers, ours, theirs" },
+              { title: "⑤ 재귀대명사 (~자신)", desc: "주어가 자기 자신을 동작할 때 & 강조", examples: "myself, yourself, himself, herself, itself, ourselves, themselves" }
+            ],
+            rule: "시험 팁: He looked at him(다른 남자 봄) vs He looked at himself(거울 속 자기 자신 봄)"
+          },
+          {
+            name: "2. 손가락으로 콕 찌르는 지시대명사 (Demonstrative)",
+            subItems: [
+              { title: "가까운 것", desc: "단수: this (이것) / 복수: these (이것들)", examples: "This is my dog. / These are my books." },
+              { title: "멀리 있는 것", desc: "단수: that (저것) / 복수: those (저것들)", examples: "That is an airplane. / Those are stars." },
+              { title: "시험 킬러 비교 구문", desc: "앞에 나온 단어의 반복을 피하는 that of / those of", examples: "The climate of Korea is like that of Japan." }
+            ],
+            rule: "시험 팁: 앞에 나온 게 단수면 that of, 복수면 those of로 짝 맞추기!"
+          }
+        ],
+        deepExamples: [
+          { en: "She cut the cake by herself.", kr: "그녀는 혼자 힘으로 케이크를 잘랐어요.", tip: "by oneself = 혼자 힘으로 (재귀대명사 관용 표현)" },
+          { en: "This backpack is mine, and that one is his.", kr: "이 배낭은 내 것이고, 저건 그의 것이야.", tip: "mine = my backpack, his = his backpack (소유대명사)" },
+          { en: "The ears of rabbits are longer than those of cats.", kr: "토끼의 귀는 고양이의 귀보다 길어요.", tip: "앞에 ears(복수)를 대신하니까 that이 아니라 those of!" },
+          { en: "They enjoyed themselves at the amusement park.", kr: "그들은 놀이공원에서 아주 즐거운 시간을 보냈어요.", tip: "enjoy oneself = 즐겁게 놀다" },
+          { en: "These apples taste sweeter than those.", kr: "이 사과들이 저 사과들보다 더 달콤해.", tip: "가까운 복수(these) vs 먼 복수(those)" }
+        ]
+      },
+      verb: {
+        title: "한국 시험 필수 5대 동사 블루프린트 (Verb Blueprint)",
+        subtitle: "[자동사 vs 타동사] & [감각동사] & [수여동사] & [사역동사] 완벽 마스터",
+        teacherNote: "“OO야, 한국 시험에선 동사를 5총사로 나눠서 낚시를 해. 1) 혼자 노는 자동사, 2) 짝꿍(을/를)이 필요한 타동사, 3) 눈코입 감각동사(뒤에 형용사만!), 4) 선물 주는 수여동사(4형식 ➡️ 3형식 전치사 to/for/of), 5) 대장 사역동사(뒤에 동사원형!). 이것만 알면 중고등 영어 문법 킬러 문제 다 풀려!”",
+        categories: [
+          {
+            name: "1. 혼자 노는 자동사 vs 먹잇감이 필요한 타동사",
+            subItems: [
+              { title: "자동사 (Intransitive)", desc: "뒤에 '을/를(목적어)' 없이 혼자 완벽한 동사. 전치사 도움 받아 명사 붙임", examples: "fly, sleep, smile, arrive at, look at" },
+              { title: "타동사 (Transitive)", desc: "뒤에 '을/를(목적어)'이 무조건 와야 하는 동사. 전치사 쓰면 절대 안 됨!", examples: "eat pizza, love you, discuss (about 안 됨!), marry (with 안 됨!)" }
+            ],
+            rule: "한국 시험 1등 함정: 'We discussed about the problem (X)' ➡️ 타동사 discuss 뒤에 about 쓰면 시험 0점!"
+          },
+          {
+            name: "2. 감각동사 (눈·코·입·귀·피부)",
+            subItems: [
+              { title: "5대 감각동사", desc: "look(~처럼 보이다), smell(~냄새나다), taste(~맛이 나다), sound(~처럼 들리다), feel(~느껴지다)", examples: "look happy (O) / look happily (X)" }
+            ],
+            rule: "철칙: 한국말로는 '맛있게'처럼 부사처럼 해석돼도 무조건 [형용사]만 써야 함!"
+          },
+          {
+            name: "3. 선물 주는 수여동사 (4형식 ➡️ 3형식 전환)",
+            subItems: [
+              { title: "to를 쓰는 동사", desc: "대부분의 방향 전달: give, send, show, teach, tell", examples: "gave me a book ➡️ gave a book to me" },
+              { title: "for를 쓰는 동사 (정성 들이기 MBC 파이)", desc: "Make, Buy, Cook, Find 등 정성이 들어간 동사", examples: "bought me a toy ➡️ bought a toy for me" },
+              { title: "of를 쓰는 동사", desc: "질문/부탁: ask", examples: "asked me a question ➡️ asked a question of me" }
+            ],
+            rule: "시험 공식: 4형식(사람+사물) ➡️ 3형식(사물 + to/for/of + 사람)"
+          },
+          {
+            name: "4. 명령 대장 사역동사 (시키다 동사)",
+            subItems: [
+              { title: "사역동사 3대장", desc: "make(강제로 시키다), have(부탁해서 시키다), let(허락해주다)", examples: "Mom made me clean my room." }
+            ],
+            rule: "절대 법칙: [사역동사 + 목적어 + 동사원형]! to clean이나 cleaning 쓰면 무조건 오답!"
+          }
+        ],
+        deepExamples: [
+          { en: "He married Jane last year.", kr: "그는 작년에 제인과 결혼했어요.", tip: "marry with Jane이라고 쓰면 시험 함정에 걸린 거예요! marry는 타동사!" },
+          { en: "The cookies smell delicious.", kr: "그 쿠키들은 맛있는 냄새가 나요.", tip: "smell 뒤에 deliciously(부사) 쓰면 틀림! 형용사 delicious가 정답!" },
+          { en: "Dad bought a new bicycle for me.", kr: "아빠가 나를 위해 새 자전거를 사주셨어요.", tip: "buy는 정성이 들어간 동사라 3형식으로 바꿀 때 전치사 for!" },
+          { en: "The teacher let us leave early.", kr: "선생님은 우리가 일찍 떠나도록 허락해주셨어요.", tip: "let이 사역동사라서 to leave가 아니라 순수한 동사원형 leave!" },
+          { en: "She arrived at the airport on time.", kr: "그녀는 제시간에 공항에 도착했어요.", tip: "arrive는 자동사라 airport 앞에 전치사 at이 꼭 필요해요!" }
+        ]
+      },
+      adjective: {
+        title: "형용사의 핵심 종류 & 문법 2대 용법 블루프린트",
+        subtitle: "[성상/수량/지시형용사] & [한정적 용법 vs 서술적 용법] 완벽 해부",
+        teacherNote: "“OO야, 형용사는 딱 2가지만 기억하면 돼. 1) 명사 앞에 바로 모자 씌우기(a cute cat - 한정적 용법) vs be동사 뒤에서 슬쩍 설명해주기(The cat is cute - 서술적 용법). 그리고 시험에서 맨날 나오는 many/much, few/little 수량 형용사 짝 맞추기만 하면 끝이야!”",
+        categories: [
+          {
+            name: "1. 의미별 3대 분류",
+            subItems: [
+              { title: "성상(성질·상태) 형용사", desc: "모양, 색깔, 성격, 성질을 나타냄", examples: "round, blue, kind, smart, hot" },
+              { title: "수량 형용사 (한국 시험 최다 출제!)", desc: "수와 양을 나타냄. 셀 수 있는 명사 vs 셀 수 없는 명사 짝짓기", examples: "many/few/a few (셀 수 있음) vs much/little/a little (셀 수 없음)" },
+              { title: "지시 형용사", desc: "this, that, these, those 뒤에 명사가 붙어 '이 책, 저 차'로 가리킴", examples: "this bag, that building, these shoes" }
+            ],
+            rule: "수량 공식: a few(조금 있는 - 긍정) vs few(거의 없는 - 부정) / a little(조금 있는) vs little(거의 없는)"
+          },
+          {
+            name: "2. 문법적 2대 용법 (한정 vs 서술)",
+            subItems: [
+              { title: "한정적 용법 (모자 씌우기)", desc: "명사 바로 앞이나 뒤에서 직접 명사를 수식함", examples: "a brave soldier, cold water, something special" },
+              { title: "서술적 용법 (설명 보어)", desc: "be동사나 감각동사 뒤에서 주어의 상태를 서술함", examples: "The soldier is brave. / The baby is asleep." }
+            ],
+            rule: "특수 규칙: a-로 시작하는 형용사(alive, asleep, awake, afraid)는 명사 앞에 절대 못 오고 서술적(보어)으로만 씀!"
+          }
+        ],
+        deepExamples: [
+          { en: "There are a few apples in the basket.", kr: "바구니에 사과가 몇 개 있어요.", tip: "사과는 셀 수 있고(apples), a few니까 '몇 개 있는' 긍정적 뉘앙스!" },
+          { en: "We have little water left in the desert.", kr: "사막에 우리에게 남은 물이 거의 없어요.", tip: "물은 못 세고(water), 'a'가 없는 little이니까 '거의 없는' 아슬아슬한 부정!" },
+          { en: "The cute baby is finally asleep.", kr: "그 귀여운 아기가 드디어 잠들었어요.", tip: "asleep baby라고 안 써요! asleep은 서술 보어로만 쓰여요." },
+          { en: "I need something sweet to eat.", kr: "나 뭔가 달콤한 먹을 것이 필요해.", tip: "-thing 단어는 형용사가 뒤에서 후치 수식!" },
+          { en: "She has many friends in her new school.", kr: "그녀는 새 학교에 친구들이 많아요.", tip: "친구들(friends)은 셀 수 있으니까 much가 아니라 many!" }
+        ]
+      },
+      adverb: {
+        title: "부사의 5대 종류 & 위치 공식 블루프린트 (Adverb Blueprint)",
+        subtitle: "[양태·시간·장소·빈도·정도부사] & [조·be 뒤, 일 앞 위치 공식]",
+        teacherNote: "“OO야, 부사는 문장의 양념이야. '어떻게?(양태)', '언제?(시간)', '어디서?(장소)', '얼마나 자주?(빈도)', '얼마나 세게?(정도)'를 알려줘. 시험에선 딱 2개만 낚시해. 1) 빈도부사는 조동사·be동사 뒤, 일반동사 앞! 2) fast, hard처럼 ly 안 붙어도 부사인 녀석들!”",
+        categories: [
+          {
+            name: "1. 의미별 5대 부사 분류",
+            subItems: [
+              { title: "양태(상태·방법) 부사", desc: "동작을 '어떻게' 하는지 설명 (형용사 + ly)", examples: "slowly, happily, carefully, politely" },
+              { title: "시간 부사", desc: "'언제' 일어났는지 시간 안내", examples: "now, yesterday, soon, already, tomorrow" },
+              { title: "장소 부사", desc: "'어디서' 일어났는지 위치 안내", examples: "here, there, everywhere, upstairs" },
+              { title: "빈도 부사 (시험 1등!)", desc: "'얼마나 자주' 반복하는지 빈도율 안내", examples: "always(100%), usually, often, sometimes, never(0%)" },
+              { title: "정도 부사", desc: "'얼마나 강하게' 정도를 조절", examples: "very, extremely, really, quite, too, enough" }
+            ],
+            rule: "빈도부사 위치 절대 암기: [조동사 / be동사 뒤, 일반동사 앞 (조·be 뒤, 일 앞)]"
+          },
+          {
+            name: "2. 한국 시험 단골 -ly 반전 단어들",
+            subItems: [
+              { title: "-ly로 끝나지만 형용사", desc: "명사에 ly 붙인 말 (부사 아님!)", examples: "friendly(친근한), lovely(사랑스러운), lonely(외로운)" },
+              { title: "형용사와 부사 모양이 똑같은 녀석", desc: "-ly 안 붙여도 그 자체로 부사", examples: "fast(빠른/빨리), hard(단단한/열심히), early(이른/일찍)" },
+              { title: "-ly 붙이면 뜻이 180도 바뀌는 녀석", desc: "hard(열심히) ➡️ hardly(거의 ~않다) / late(늦은) ➡️ lately(최근에)" }
+            ],
+            rule: "시험 팁: He works hardly (X) ➡️ He works hard (O)! hardly는 '거의 일 안 한다'가 됨!"
+          }
+        ],
+        deepExamples: [
+          { en: "He is always kind to his neighbors.", kr: "그는 이웃들에게 항상 친절해요.", tip: "be동사(is) 뒤에 always 위치!" },
+          { en: "My sister usually reads books before bed.", kr: "내 여동생은 대개 자기 전에 책을 읽어요.", tip: "일반동사(reads) 앞에 usually 위치!" },
+          { en: "The dog looked friendly at the visitors.", kr: "그 강아지는 방문객들에게 다정해 보였어요.", tip: "friendly는 -ly로 끝나지만 친근한이라는 '형용사'예요!" },
+          { en: "She ran so fast that she won first place.", kr: "그녀는 너무 빨리 달려서 1등을 했어요.", tip: "fastly는 세상에 없어요! fast가 부사!" },
+          { en: "I could hardly believe the shocking news.", kr: "나는 그 충격적인 소식을 거의 믿을 수 없었어요.", tip: "hardly는 '거의 ~할 수 없는' 부정 부사!" }
+        ]
+      },
+      preposition: {
+        title: "전치사의 시공간 계층 & 전치사+동명사 블루프린트",
+        subtitle: "[at ➡️ on ➡️ in 시간·공간 3단계] & [전치사 뒤에는 무조건 -ing]",
+        teacherNote: "“OO야, 전치사는 점(at) ➡️ 면(on) ➡️ 공간/달/연도(in) 크기 순서로 넓어지는 피라미드만 그리면 끝이야. 그리고 한국 시험에서는 '전치사 뒤에 동사 쓸 땐 무조건 -ing(동명사)' 붙이라는 법칙을 제일 사랑해!”",
+        categories: [
+          {
+            name: "1. 시간 & 장소의 피라미드 (at < on < in)",
+            subItems: [
+              { title: "at (콕 찍은 점)", desc: "정확한 시각 / 좁은 지점 장소", examples: "at 7:30, at noon, at the bus stop, at school" },
+              { title: "on (면 & 날짜)", desc: "특정한 날, 요일 / 접촉해 있는 표면", examples: "on Monday, on my birthday, on the desk, on the wall" },
+              { title: "in (넓은 공간 & 긴 시간)", desc: "월, 연도, 계절, 세기 / 둘러싸인 공간·도시·나라", examples: "in July, in 2026, in winter, in the room, in Seoul, in Korea" }
+            ],
+            rule: "비교: at 5 PM (시각) vs on Friday (요일) vs in summer (계절)"
+          },
+          {
+            name: "2. 전치사의 절대 문법 법칙",
+            subItems: [
+              { title: "전치사 + 목적어(명사/대명사 목적격)", desc: "전치사 뒤엔 주격(he)이 아니라 목적격(him)!", examples: "with him, for her, about them" },
+              { title: "전치사 + 동명사(-ing)", desc: "전치사 뒤에 동사가 오면 무조건 동명사(-ing)로 변신!", examples: "thank you for inviting, good at speaking, instead of going" }
+            ],
+            rule: "시험 공식: 전치사 뒤에 to부정사나 동사원형 오면 무조건 오답 삑!"
+          }
+        ],
+        deepExamples: [
+          { en: "The concert starts at 7 PM on Saturday in December.", kr: "콘서트는 12월 토요일 오후 7시에 시작해요.", tip: "at(시각) ➡️ on(요일) ➡️ in(월) 완벽 3단계!" },
+          { en: "Thank you for coming to my birthday party.", kr: "내 생일 파티에 와줘서 고마워.", tip: "for가 전치사라서 come 뒤에 -ing!" },
+          { en: "She is very interested in learning Korean culture.", kr: "그녀는 한국 문화를 배우는 데 아주 관심이 많아요.", tip: "in 전치사 + learning 동명사!" },
+          { en: "There is a beautiful painting on the wall.", kr: "벽에 아름다운 그림이 하나 걸려 있어요.", tip: "벽 표면에 붙어있으니 on!" },
+          { en: "The cat jumped into the cardboard box.", kr: "고양이가 골판지 상자 안으로 쏙 뛰어들었어요.", tip: "into = 밖에서 안으로 역동적인 방향!" }
+        ]
+      },
+      conjunction: {
+        title: "접속사의 종류 & 한국 시험 킬러 공식 블루프린트",
+        subtitle: "[등위접속사 병렬구조] & [상관접속사 수일치] & [because vs because of]",
+        teacherNote: "“OO야, 접속사는 다리(Bridge)야. 1) and, but, or 양옆은 형태가 같아야 하는 '양팔저울 병렬구조', 2) not only A but also B 같은 짝꿍 상관접속사, 3) 시험 1등 문제인 because(문장) vs because of(단어 명사) 구별하기만 풀 줄 알면 완벽해!”",
+        categories: [
+          {
+            name: "1. 등위접속사 & 양팔저울 병렬구조",
+            subItems: [
+              { title: "등위접속사 (FANBOYS)", desc: "문법적으로 대등한 단어와 단어, 문장과 문장을 연결", examples: "and(그리고), but(그러나), or(또는), so(그래서)" },
+              { title: "양팔 저울 병렬 공식 (시험 1등)", desc: "and 양쪽은 품사와 형태가 반드시 똑같아야 함!", examples: "He likes swimming and running (O) / swimming and to run (X)" }
+            ],
+            rule: "병렬 규칙: 동명사+동명사, to부정사+to부정사, 형용사+형용사"
+          },
+          {
+            name: "2. 세트로 다니는 상관접속사",
+            subItems: [
+              { title: "not only A but also B", desc: "A뿐만 아니라 B도 (동사는 B에 일치시킴!)", examples: "Not only you but also he is right." },
+              { title: "both A and B", desc: "A와 B 둘 다 (무조건 복수 취급 are/were)", examples: "Both Tom and Jane are smart." },
+              { title: "either A or B / neither A nor B", desc: "A나 B 둘 중 하나 / A도 B도 둘 다 아닌", examples: "Either you or she has to go." }
+            ],
+            rule: "수 일치 시험 포인트: both A and B 빼고는 전부 가까운 B에 동사 수를 맞춤!"
+          },
+          {
+            name: "3. 종속접속사 vs 전치사 대결 (한국 시험 100% 출제)",
+            subItems: [
+              { title: "because vs because of", desc: "because + S+V (문장) vs because of + 명사 (단어)", examples: "because it rained vs because of the rain" },
+              { title: "although vs in spite of / despite", desc: "although + S+V (비록 ~이지만) vs despite + 명사", examples: "although he was tired vs despite his tiredness" }
+            ],
+            rule: "뒤에 동사가 살아있으면 접속사, 명사만 띡 있으면 전치사!"
+          }
+        ],
+        deepExamples: [
+          { en: "He likes singing and playing the guitar.", kr: "그는 노래하는 것과 기타 연주하는 것을 좋아해요.", tip: "singing과 playing 둘 다 -ing 형태로 양팔저울 맞추기!" },
+          { en: "We stayed inside because of the heavy snow.", kr: "폭설 때문에 우리는 실내에 머물렀어요.", tip: "the heavy snow는 명사 덩어리니까 because of!" },
+          { en: "Not only Tom but also his friends like soccer.", kr: "탐뿐만 아니라 그의 친구들도 축구를 좋아해요.", tip: "B 자리인 his friends(복수)에 맞춰 like(동사원형)!" },
+          { en: "Both English and Korean are fun languages.", kr: "영어와 한국어 둘 다 재미있는 언어예요.", tip: "both A and B는 둘 다니까 무조건 복수동사 are!" },
+          { en: "Although it was very cold, we went for a walk.", kr: "비록 날씨가 무척 추웠지만, 우리는 산책을 나갔어요.", tip: "it was(주어+동사 문장)가 왔으니 although가 정답!" }
+        ]
+      }
+    };
+
+    // State Variables
+    let currentPosIndex = 0;
+    let currentViewMode = 'basic'; // 'basic' or 'blueprint'
+    let isTeacherModeOn = true;
+    let isPenMode = false;
+    let penColor = '#2563eb';
+    let penLineWidth = 4;
+    let isDrawing = false;
+    let lastX = 0;
+    let lastY = 0;
+
+    // DOM Elements
+    const posNavList = document.getElementById('posNavList');
+    const contentHeader = document.getElementById('contentHeader');
+    const basicViewContainer = document.getElementById('basicViewContainer');
+    const blueprintViewContainer = document.getElementById('blueprintViewContainer');
+    const blueprintContentArea = document.getElementById('blueprintContentArea');
+    const teacherCueBox = document.getElementById('teacherCueBox');
+    const teacherScriptText = document.getElementById('teacherScriptText');
+    const teacherExamTip = document.getElementById('teacherExamTip');
+    const hanjaExplanation = document.getElementById('hanjaExplanation');
+    const hanjaDetail = document.getElementById('hanjaDetail');
+    const englishIntuition = document.getElementById('englishIntuition');
+    const englishIntuitionDetail = document.getElementById('englishIntuitionDetail');
+    const coreRole = document.getElementById('coreRole');
+    const coreRoleDetail = document.getElementById('coreRoleDetail');
+    const examplesContainer = document.getElementById('examplesContainer');
+    const examFocusPoints = document.getElementById('examFocusPoints');
+    const quizContainer = document.getElementById('quizContainer');
+    const quizBadge = document.getElementById('quizBadge');
+
+    // Modal Elements
+    const wordDetailModal = document.getElementById('wordDetailModal');
+    const modalCard = document.getElementById('modalCard');
+    const modalWord = document.getElementById('modalWord');
+    const modalPosBadge = document.getElementById('modalPosBadge');
+    const modalMeaning = document.getElementById('modalMeaning');
+    const modalFunction = document.getElementById('modalFunction');
+    const modalQuestionPrompt = document.getElementById('modalQuestionPrompt');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const modalConfirmBtn = document.getElementById('modalConfirmBtn');
+
+    // Canvas Elements
+    const canvas = document.getElementById('drawingCanvas');
+    const ctx = canvas.getContext('2d');
+    const penToolbar = document.getElementById('penToolbar');
+    const togglePenBtn = document.getElementById('togglePenBtn');
+    const closePenBtn = document.getElementById('closePenBtn');
+    const clearCanvasBtn = document.getElementById('clearCanvasBtn');
+    const penSizeThin = document.getElementById('penSizeThin');
+    const penSizeThick = document.getElementById('penSizeThick');
+    const toggleTeacherModeBtn = document.getElementById('toggleTeacherModeBtn');
+    const cueStatus = document.getElementById('cueStatus');
+    const fullscreenBtn = document.getElementById('fullscreenBtn');
+
+    // Switch View Mode: 'basic' vs 'blueprint'
+    function switchViewMode(mode) {
+      currentViewMode = mode;
+      const btnBasic = document.getElementById('viewModeBasic');
+      const btnBlueprint = document.getElementById('viewModeBlueprint');
+
+      if (mode === 'basic') {
+        btnBasic.className = 'px-3 py-1 text-xs font-bold rounded-lg transition bg-white text-blue-700 shadow-xs';
+        btnBlueprint.className = 'px-3 py-1 text-xs font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition';
+        basicViewContainer.classList.remove('hidden');
+        blueprintViewContainer.classList.add('hidden');
+      } else {
+        btnBlueprint.className = 'px-3 py-1 text-xs font-bold rounded-lg transition bg-white text-blue-700 shadow-xs';
+        btnBasic.className = 'px-3 py-1 text-xs font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition';
+        basicViewContainer.classList.add('hidden');
+        blueprintViewContainer.classList.remove('hidden');
+        renderBlueprintView();
+      }
+      renderHeader();
+    }
+
+    // Render Sidebar Navigation
+    function renderNav() {
+      posNavList.innerHTML = '';
+      posData.forEach((item, index) => {
+        const isActive = index === currentPosIndex;
+        const btn = document.createElement('button');
+        btn.className = `w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left transition font-medium text-xs ${
+          isActive 
+            ? 'bg-blue-50 text-blue-700 border border-blue-200 font-bold shadow-xs' 
+            : 'text-slate-600 hover:bg-slate-100'
+        }`;
+        btn.innerHTML = `
+          <div class="flex items-center space-x-2.5">
+            <span class="w-6 h-6 rounded-lg flex items-center justify-center text-xs ${
+              isActive ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-500'
+            }">
+              <i class="fa-solid ${item.icon}"></i>
+            </span>
+            <span>${item.nameKr} <span class="text-slate-400 font-normal">(${item.nameEn})</span></span>
+          </div>
+          <i class="fa-solid fa-chevron-right text-3xs ${isActive ? 'text-blue-500' : 'text-slate-300'}"></i>
+        `;
+        btn.onclick = () => {
+          currentPosIndex = index;
+          renderNav();
+          renderContent();
+        };
+        posNavList.appendChild(btn);
+      });
+    }
+
+    // Render Top Header Area
+    function renderHeader() {
+      const cur = posData[currentPosIndex];
+      contentHeader.innerHTML = `
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-3">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white text-xl shadow-md">
+              <i class="fa-solid ${cur.icon}"></i>
+            </div>
+            <div>
+              <div class="flex items-center space-x-2">
+                <h2 class="text-xl font-extrabold text-slate-900">${cur.nameKr} <span class="text-blue-600 font-bold">(${cur.nameEn})</span></h2>
+                <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full ${cur.badgeBg}">
+                  ${currentViewMode === 'basic' ? '기본 개념 탐구' : '세부 종류 블루프린트'}
+                </span>
+              </div>
+              <p class="text-xs text-slate-500 mt-0.5">${cur.oneLiner}</p>
+            </div>
+          </div>
+          <div class="hidden sm:flex items-center space-x-2">
+            <button onclick="prevPos()" class="px-2.5 py-1 text-xs border border-slate-200 rounded-lg hover:bg-slate-100 text-slate-600 font-medium">
+              <i class="fa-solid fa-arrow-left mr-1"></i>이전
+            </button>
+            <button onclick="nextPos()" class="px-2.5 py-1 text-xs bg-slate-900 hover:bg-slate-800 rounded-lg text-white font-medium">
+              다음<i class="fa-solid fa-arrow-right ml-1"></i>
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    function prevPos() {
+      currentPosIndex = (currentPosIndex - 1 + posData.length) % posData.length;
+      renderNav();
+      renderContent();
+    }
+
+    function nextPos() {
+      currentPosIndex = (currentPosIndex + 1) % posData.length;
+      renderNav();
+      renderContent();
+    }
+
+    // Render Basic Lesson Content
+    function renderBasicView() {
+      const cur = posData[currentPosIndex];
+
+      teacherScriptText.textContent = cur.teacherScript;
+      teacherExamTip.innerHTML = `<strong>💡 시험 핵심 팁:</strong> ${cur.examTips}`;
+
+      hanjaExplanation.textContent = cur.hanja;
+      hanjaDetail.textContent = cur.hanjaDetail;
+
+      englishIntuition.textContent = cur.englishIntuition;
+      englishIntuitionDetail.textContent = cur.englishIntuitionDetail;
+
+      coreRole.textContent = cur.coreRole;
+      coreRoleDetail.textContent = cur.coreRoleDetail;
+
+      // Examples rendering
+      examplesContainer.innerHTML = '';
+      cur.examples.forEach((ex, idx) => {
+        const exCard = document.createElement('div');
+        exCard.className = 'p-3.5 rounded-xl border border-slate-100 bg-slate-50/70 hover:bg-slate-50 hover:border-slate-300 transition';
+        
+        let sentenceHtml = ex.sentence;
+        ex.breakdown.forEach(b => {
+          const regex = new RegExp(`\\b${b.word}\\b`, 'gi');
+          sentenceHtml = sentenceHtml.replace(regex, `<span class="word-chip cursor-pointer inline-block bg-blue-100 text-blue-800 hover:bg-blue-200 px-1.5 py-0.5 rounded font-bold underline decoration-blue-400 decoration-2 transition" data-word="${b.word}" data-pos="${b.pos}" data-role="${b.role}" data-prompt="${b.prompt}">${b.word}</span>`);
+        });
+
+        exCard.innerHTML = `
+          <div class="flex items-start justify-between">
+            <span class="text-xs font-bold text-slate-400">#0${idx + 1}</span>
+          </div>
+          <div class="text-sm font-semibold text-slate-900 mt-1 leading-relaxed">
+            ${sentenceHtml}
+          </div>
+          <div class="text-xs text-slate-500 mt-1">
+            ${ex.translation}
+          </div>
+        `;
+        examplesContainer.appendChild(exCard);
+      });
+
+      // Attach click events to clickable chips
+      document.querySelectorAll('.word-chip').forEach(chip => {
+        chip.addEventListener('click', (e) => {
+          e.stopPropagation();
+          openWordModal(
+            chip.dataset.word,
+            chip.dataset.pos,
+            chip.dataset.role,
+            chip.dataset.prompt
+          );
+        });
+      });
+
+      // Render Exam Points
+      examFocusPoints.innerHTML = '';
+      cur.examPoints.forEach(pt => {
+        const ptCard = document.createElement('div');
+        ptCard.className = 'p-3 bg-slate-50 rounded-xl border border-slate-100';
+        ptCard.innerHTML = `
+          <div class="font-bold text-slate-800 flex items-center space-x-1.5 mb-1">
+            <i class="fa-solid fa-check text-blue-500 text-2xs"></i>
+            <span>${pt.title}</span>
+          </div>
+          <p class="text-slate-600 leading-relaxed">${pt.desc}</p>
+        `;
+        examFocusPoints.appendChild(ptCard);
+      });
+
+      // Render Quiz
+      renderQuiz(cur.quiz);
+    }
+
+    // Render Quiz Logic
+    function renderQuiz(quiz) {
+      quizContainer.innerHTML = `
+        <p class="text-sm font-semibold text-white mb-2 leading-relaxed">
+          ${quiz.question}
+        </p>
+        <div class="p-2.5 bg-black/20 rounded-lg text-xs font-mono text-indigo-200 mb-3">
+          ${quiz.sentenceText}
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2" id="quizOptionsArea"></div>
+        <div id="quizFeedback" class="hidden mt-3 p-3 rounded-lg text-xs leading-relaxed"></div>
+      `;
+
+      const optionsArea = document.getElementById('quizOptionsArea');
+      const feedback = document.getElementById('quizFeedback');
+
+      quiz.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'p-2.5 bg-white/10 hover:bg-white/20 active:bg-white/30 border border-white/10 rounded-xl text-left text-xs font-semibold text-white transition';
+        btn.textContent = `${idx + 1}. ${opt}`;
+        btn.onclick = () => {
+          feedback.classList.remove('hidden');
+          if (idx === quiz.correctIndex) {
+            feedback.className = 'mt-3 p-3 rounded-xl bg-emerald-500/20 border border-emerald-400/30 text-emerald-100 text-xs';
+            feedback.innerHTML = `<strong>🎉 정답입니다!</strong> ${quiz.explanation}`;
+          } else {
+            feedback.className = 'mt-3 p-3 rounded-xl bg-rose-500/20 border border-rose-400/30 text-rose-100 text-xs';
+            feedback.innerHTML = `<strong>다시 한번 생각해볼까요? 💡</strong> ${quiz.explanation}`;
+          }
+        };
+        optionsArea.appendChild(btn);
+      });
+    }
+
+    // Render Blueprint View
+    function renderBlueprintView() {
+      const cur = posData[currentPosIndex];
+      const bp = blueprintData[cur.id];
+
+      if (!bp) {
+        blueprintContentArea.innerHTML = `
+          <div class="p-12 text-center bg-white rounded-2xl border border-slate-200">
+            <i class="fa-solid fa-face-laugh-beam text-4xl text-amber-500 mb-3"></i>
+            <h3 class="font-bold text-base text-slate-800">감탄사는 세부 블루프린트 분류가 필요 없어요!</h3>
+            <p class="text-xs text-slate-500 mt-1">혼자 감정을 폭발시키는 독립된 단어로, 문법 규칙 없이 느낌표만 챙겨주면 끝납니다!</p>
+          </div>
+        `;
+        return;
+      }
+
+      let categoriesHtml = '';
+      bp.categories.forEach(cat => {
+        let subItemsHtml = '';
+        cat.subItems.forEach(sub => {
+          subItemsHtml += `
+            <div class="p-3 bg-white rounded-xl border border-slate-200 shadow-2xs">
+              <div class="font-bold text-slate-900 text-xs mb-0.5">${sub.title}</div>
+              <div class="text-2xs text-slate-500 mb-1.5 leading-relaxed">${sub.desc}</div>
+              <div class="text-2xs font-mono bg-blue-50/70 text-blue-700 px-2 py-1 rounded border border-blue-100">
+                ${sub.examples}
+              </div>
+            </div>
+          `;
+        });
+
+        categoriesHtml += `
+          <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200">
+            <h4 class="font-bold text-sm text-slate-800 mb-3 flex items-center space-x-2">
+              <span class="w-2 h-2 rounded-full bg-blue-600"></span>
+              <span>${cat.name}</span>
+            </h4>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 mb-3">
+              ${subItemsHtml}
+            </div>
+            <div class="text-xs font-semibold text-amber-800 bg-amber-50 border border-amber-200/60 p-2.5 rounded-xl">
+              💡 ${cat.rule}
+            </div>
+          </div>
+        `;
+      });
+
+      let deepExamplesHtml = '';
+      bp.deepExamples.forEach((de, idx) => {
+        deepExamplesHtml += `
+          <div class="p-3 bg-white rounded-xl border border-slate-200 flex flex-col md:flex-row md:items-center justify-between text-xs space-y-1.5 md:space-y-0">
+            <div>
+              <span class="font-bold text-slate-400 mr-2">#0${idx + 1}</span>
+              <span class="font-bold text-slate-900">${de.en}</span>
+              <span class="text-slate-500 ml-2">(${de.kr})</span>
+            </div>
+            <span class="text-2xs font-semibold bg-indigo-50 text-indigo-700 px-2.5 py-1 rounded-full border border-indigo-100 shrink-0">
+              ${de.tip}
+            </span>
+          </div>
+        `;
+      });
+
+      blueprintContentArea.innerHTML = `
+        <div class="bg-gradient-to-r from-blue-700 to-indigo-700 rounded-2xl p-5 text-white shadow-md">
+          <span class="text-2xs font-bold uppercase tracking-wider bg-white/20 px-2.5 py-0.5 rounded-full">Architecture Blueprint</span>
+          <h3 class="text-lg font-black text-white mt-2">${bp.title}</h3>
+          <p class="text-xs text-blue-100 mt-1 leading-relaxed">${bp.subtitle}</p>
+        </div>
+
+        <div class="bg-amber-50 border border-amber-200 rounded-2xl p-4 text-xs text-amber-950 font-medium">
+          <strong class="text-amber-800 block mb-1 font-bold">👩‍🏫 선생님 코칭 노트</strong>
+          ${bp.teacherNote}
+        </div>
+
+        <div class="space-y-4">
+          ${categoriesHtml}
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs">
+          <h4 class="font-bold text-sm text-slate-900 mb-3 flex items-center space-x-2">
+            <i class="fa-solid fa-flask-vial text-blue-600"></i>
+            <span>종류별 5개 정밀 예문 & 시험 해킹</span>
+          </h4>
+          <div class="space-y-2">
+            ${deepExamplesHtml}
+          </div>
+        </div>
+      `;
+    }
+
+    // Modal Control
+    function openWordModal(word, pos, role, prompt) {
+      modalWord.textContent = word;
+      modalPosBadge.textContent = pos;
+      modalMeaning.textContent = `한국식 문법 분석: [${pos}]`;
+      modalFunction.textContent = role;
+      modalQuestionPrompt.textContent = prompt;
+
+      wordDetailModal.classList.remove('hidden');
+      setTimeout(() => {
+        modalCard.classList.remove('scale-95', 'opacity-0');
+        modalCard.classList.add('scale-100', 'opacity-100');
+      }, 10);
+    }
+
+    function closeModal() {
+      modalCard.classList.add('scale-95', 'opacity-0');
+      modalCard.classList.remove('scale-100', 'opacity-100');
+      setTimeout(() => {
+        wordDetailModal.classList.add('hidden');
+      }, 150);
+    }
+
+    closeModalBtn.onclick = closeModal;
+    modalConfirmBtn.onclick = closeModal;
+    wordDetailModal.onclick = (e) => {
+      if (e.target === wordDetailModal) closeModal();
+    };
+
+    // Toggle Teacher Mode
+    toggleTeacherModeBtn.onclick = () => {
+      isTeacherModeOn = !isTeacherModeOn;
+      if (isTeacherModeOn) {
+        teacherCueBox.classList.remove('hidden');
+        cueStatus.textContent = 'ON';
+        cueStatus.className = 'font-bold text-xs bg-amber-200 text-amber-900 px-1.5 py-0.2 rounded-full ml-1';
+      } else {
+        teacherCueBox.classList.add('hidden');
+        cueStatus.textContent = 'OFF';
+        cueStatus.className = 'font-bold text-xs bg-slate-200 text-slate-600 px-1.5 py-0.2 rounded-full ml-1';
+      }
+    };
+
+    // Fullscreen Toggle
+    fullscreenBtn.onclick = () => {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        }
+      }
+    };
+
+    // Responsive Canvas Resizing
+    function resizeCanvas() {
+      const container = document.getElementById('mainScrollArea');
+      canvas.width = container.scrollWidth;
+      canvas.height = container.scrollHeight;
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+
+    // Pen Mode Logic
+    function startDrawing(e) {
+      if (!isPenMode) return;
+      isDrawing = true;
+      const rect = canvas.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      lastX = clientX - rect.left;
+      lastY = clientY - rect.top;
+    }
+
+    function draw(e) {
+      if (!isDrawing || !isPenMode) return;
+      e.preventDefault();
+      const rect = canvas.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      const currentX = clientX - rect.left;
+      const currentY = clientY - rect.top;
+
+      ctx.beginPath();
+      ctx.moveTo(lastX, lastY);
+      ctx.lineTo(currentX, currentY);
+      ctx.strokeStyle = penColor;
+      ctx.lineWidth = penLineWidth;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.stroke();
+
+      lastX = currentX;
+      lastY = currentY;
+    }
+
+    function stopDrawing() {
+      isDrawing = false;
+    }
+
+    // Canvas Events (Mouse & Touch)
+    canvas.addEventListener('mousedown', startDrawing);
+    canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('mouseup', stopDrawing);
+    canvas.addEventListener('mouseleave', stopDrawing);
+
+    canvas.addEventListener('touchstart', startDrawing, { passive: false });
+    canvas.addEventListener('touchmove', draw, { passive: false });
+    canvas.addEventListener('touchend', stopDrawing);
+
+    // Pen Toolbar Actions
+    togglePenBtn.onclick = () => {
+      isPenMode = !isPenMode;
+      if (isPenMode) {
+        resizeCanvas();
+        canvas.classList.remove('pointer-events-none');
+        canvas.classList.add('pen-active');
+        penToolbar.classList.remove('hidden');
+        togglePenBtn.className = 'flex items-center space-x-1.5 px-3 py-1.5 bg-indigo-600 text-white rounded-lg text-sm font-medium transition touch-action-manipulation shadow-sm';
+      } else {
+        canvas.classList.add('pointer-events-none');
+        canvas.classList.remove('pen-active');
+        penToolbar.classList.add('hidden');
+        togglePenBtn.className = 'flex items-center space-x-1.5 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-slate-700 rounded-lg text-sm font-medium transition touch-action-manipulation';
+      }
+    };
+
+    closePenBtn.onclick = () => {
+      isPenMode = false;
+      canvas.classList.add('pointer-events-none');
+      canvas.classList.remove('pen-active');
+      penToolbar.classList.add('hidden');
+      togglePenBtn.className = 'flex items-center space-x-1.5 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-slate-700 rounded-lg text-sm font-medium transition touch-action-manipulation';
+    };
+
+    clearCanvasBtn.onclick = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    };
+
+    document.querySelectorAll('.pen-color-btn').forEach(btn => {
+      btn.onclick = () => {
+        document.querySelectorAll('.pen-color-btn').forEach(b => b.classList.remove('ring-blue-600', 'ring-red-500', 'ring-amber-500', 'ring-emerald-600'));
+        penColor = btn.dataset.color;
+        btn.classList.add('ring-offset-2');
+        if (penColor === '#ef4444') btn.classList.add('ring-red-500');
+        else if (penColor === '#2563eb') btn.classList.add('ring-blue-600');
+        else if (penColor === '#f59e0b') btn.classList.add('ring-amber-500');
+        else if (penColor === '#059669') btn.classList.add('ring-emerald-600');
+      };
+    });
+
+    penSizeThin.onclick = () => {
+      penLineWidth = 2;
+      penSizeThin.className = 'px-2 py-1 text-xs rounded bg-blue-100 text-blue-700 font-bold';
+      penSizeThick.className = 'px-2 py-1 text-xs rounded bg-slate-100 hover:bg-slate-200 font-bold';
+    };
+
+    penSizeThick.onclick = () => {
+      penLineWidth = 6;
+      penSizeThick.className = 'px-2 py-1 text-xs rounded bg-blue-100 text-blue-700 font-bold';
+      penSizeThin.className = 'px-2 py-1 text-xs rounded bg-slate-100 hover:bg-slate-200 font-bold';
+    };
+
+    // Render Master Controller
+    function renderContent() {
+      renderHeader();
+      if (currentViewMode === 'basic') {
+        renderBasicView();
+      } else {
+        renderBlueprintView();
+      }
+    }
+
+    // Initialize on window load
+    window.onload = function() {
+      renderNav();
+      renderContent();
+      resizeCanvas();
+    };
+  </script>
+</body>
+</html>
